@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DNA Insight Lab | Analysis Report</title>
+<style>
+:root{--navy:#14213d;--blue:#2563eb;--pale:#eff6ff;--ink:#1f2937;--muted:#64748b;--line:#dbe3ef;--green:#047857}
+*{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.55}.top{background:var(--navy);color:white;padding:22px max(20px,calc((100% - 980px)/2));display:flex;justify-content:space-between;gap:15px;align-items:center}.brand{font-size:22px;font-weight:800}.top a{color:white;text-decoration:none;border:1px solid #8da6d9;padding:8px 12px;border-radius:8px}.wrap{max-width:980px;margin:32px auto;padding:0 18px}.panel,.report{background:white;border:1px solid var(--line);border-radius:16px;padding:24px;margin-bottom:22px;box-shadow:0 5px 18px #15294b0b}.panel h1{margin-top:0;color:var(--navy)}label{display:block;font-weight:700;margin:12px 0 8px}textarea{width:100%;min-height:110px;padding:14px;border:1px solid #b8c6d9;border-radius:10px;font:15px monospace;resize:vertical}button,.btn{border:0;border-radius:9px;background:var(--blue);color:white;padding:11px 17px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block;margin:10px 8px 0 0}.secondary{background:#e8eef8;color:var(--navy)}.hint{color:var(--muted);font-size:14px}.error{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;padding:13px;border-radius:9px}.report-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;border-bottom:2px solid var(--navy);padding-bottom:16px;margin-bottom:20px}.report-head h2{margin:0;color:var(--navy)}.date{color:var(--muted);font-size:13px;text-align:right}.tag{display:inline-block;background:var(--pale);color:#1d4ed8;border-radius:99px;padding:5px 10px;font-size:12px;font-weight:700}.sequence{font-family:Consolas,monospace;overflow-wrap:anywhere;background:#f8fafc;border:1px solid var(--line);border-radius:9px;padding:14px}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}.stat{border:1px solid var(--line);border-radius:10px;padding:14px}.stat span{display:block;color:var(--muted);font-size:13px}.stat strong{font-size:23px;color:var(--navy)}table{border-collapse:collapse;width:100%;margin:12px 0}th,td{border:1px solid var(--line);padding:10px;text-align:left}th{background:#f1f5f9}.note{border-left:4px solid var(--green);background:#ecfdf5;padding:13px;border-radius:7px;font-size:14px}.footer{text-align:center;color:var(--muted);font-size:12px;margin:22px 0}@media(max-width:600px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.report-head{display:block}.date{text-align:left;margin-top:8px}.top{align-items:flex-start;flex-direction:column}}@media print{body{background:white}.top,.panel,.no-print{display:none!important}.wrap{max-width:none;margin:0;padding:0}.report{border:0;box-shadow:none;border-radius:0;padding:0}.report-head{margin-top:0}.footer{margin-top:28px}a{color:inherit}}
+</style>
+</head>
+<body>
+<header class="top"><div><div class="brand">🧬 DNA Insight Lab</div><div>Analysis Report Generator</div></div><a href="/dashboard">← Dashboard</a></header>
+<main class="wrap">
+<section class="panel no-print">
+<h1>Generate a DNA Analysis Report</h1>
+<p>Enter a valid DNA sequence to create a structured report. You can then use your browser's print window to save it as a PDF.</p>
+<form method="POST">
+<label for="sequence">DNA sequence</label>
+<textarea id="sequence" name="sequence" required spellcheck="false" placeholder="Enter only A, T, G and C">{{ sequence or '' }}</textarea>
+<div class="hint">Example: ATGGCCATTTAA</div>
+<button type="submit">Generate Report</button>
+<a class="btn secondary" href="/dashboard">Back to Dashboard</a>
+</form>
+{% if error_message %}<p class="error"><strong>Invalid input!</strong> {{ error_message }}</p>{% endif %}
+</section>
+{% if result and not result.error %}
+<section class="report" id="printReport">
+<div class="report-head"><div><span class="tag">EDUCATIONAL BIOINFORMATICS</span><h2>DNA Sequence Analysis Report</h2><div class="hint">DNA Insight Lab</div></div><div class="date">Generated on<br><strong>{{ generated_at }}</strong></div></div>
+<h3>1. Submitted Sequence</h3><div class="sequence">{{ result.sequence }}</div>
+<div class="stats">
+<div class="stat"><span>Sequence Length</span><strong>{{ result.length }}</strong><span>bases</span></div>
+<div class="stat"><span>GC Content</span><strong>{{ '%.2f'|format(result.GC) }}%</strong></div>
+<div class="stat"><span>AT Content</span><strong>{{ '%.2f'|format(result.AT) }}%</strong></div>
+</div>
+<h3>2. Nucleotide Composition</h3>
+<table><thead><tr><th>Base</th><th>Count</th><th>Percentage</th></tr></thead><tbody>
+<tr><td>A — Adenine</td><td>{{ result.A }}</td><td>{{ '%.2f'|format(result.A / result.length * 100) }}%</td></tr>
+<tr><td>T — Thymine</td><td>{{ result.T }}</td><td>{{ '%.2f'|format(result.T / result.length * 100) }}%</td></tr>
+<tr><td>G — Guanine</td><td>{{ result.G }}</td><td>{{ '%.2f'|format(result.G / result.length * 100) }}%</td></tr>
+<tr><td>C — Cytosine</td><td>{{ result.C }}</td><td>{{ '%.2f'|format(result.C / result.length * 100) }}%</td></tr>
+</tbody></table>
+<h3>3. Sequence Operations</h3><p><strong>Complementary sequence</strong></p><div class="sequence">{{ complement }}</div><p><strong>Reverse complement</strong></p><div class="sequence">{{ reverse_complement }}</div>
+<h3>4. Interpretation</h3><p>The sequence contains {{ result.length }} bases. Guanine and cytosine together account for {{ '%.2f'|format(result.GC) }}% of the sequence, while adenine and thymine together account for {{ '%.2f'|format(result.AT) }}%.</p>
+<div class="note"><strong>Educational note:</strong> This report summarizes basic sequence properties only. GC/AT percentages and sequence differences do not independently establish disease, identity, or any clinical conclusion.</div>
+<div class="no-print" style="margin-top:22px"><button onclick="window.print()">🖨️ Save / Print Report as PDF</button><button class="secondary" onclick="window.scrollTo({top:0,behavior:'smooth'})">Create Another Report</button></div>
+<div class="footer">DNA Insight Lab · Educational sequence analysis · Not for clinical diagnosis</div>
+</section>
+{% endif %}
+</main>
+</body>
+</html>

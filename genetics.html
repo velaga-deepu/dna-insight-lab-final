@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genetic Analysis | DNA Insight Lab</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .header {
+            background: linear-gradient(
+                135deg,
+                #173f5f,
+                #20639b
+            );
+            color: white;
+            padding: 25px 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        .header p {
+            margin-top: 8px;
+            font-size: 15px;
+            opacity: 0.9;
+        }
+
+        /* =====================================================
+           MAIN CONTAINER
+        ===================================================== */
+
+        .container {
+            width: 92%;
+            max-width: 1250px;
+            margin: 30px auto;
+        }
+
+        /* =====================================================
+           START MESSAGE
+        ===================================================== */
+
+        .start-message {
+            background: white;
+            border-radius: 15px;
+            padding: 45px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+        }
+
+        .start-icon {
+            font-size: 55px;
+            margin-bottom: 10px;
+        }
+
+        .start-message h2 {
+            margin: 0;
+            font-size: 28px;
+            color: #173f5f;
+        }
+
+        .start-message p {
+            color: #667085;
+            font-size: 16px;
+        }
+
+        /* =====================================================
+           CONDITION SELECTOR
+        ===================================================== */
+
+        .selector-card {
+            background: white;
+            padding: 22px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+        }
+
+        .selector-card label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #173f5f;
+        }
+
+        select {
+            width: 100%;
+            padding: 13px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            font-size: 15px;
+            background: white;
+            cursor: pointer;
+        }
+
+        /* =====================================================
+           MAIN GRID
+        ===================================================== */
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 25px;
+            align-items: start;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: #173f5f;
+        }
+
+        /* =====================================================
+           LEFT INFORMATION PANEL
+        ===================================================== */
+
+        .condition-title {
+            font-size: 25px;
+            font-weight: bold;
+            color: #173f5f;
+            margin-bottom: 10px;
+        }
+
+        .condition-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #e8f1fa;
+            color: #20639b;
+            border-radius: 20px;
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+
+        details {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: #fafcff;
+        }
+
+        summary {
+            padding: 13px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #334155;
+        }
+
+        details p {
+            padding: 0 13px 13px 13px;
+            line-height: 1.6;
+            color: #475569;
+        }
+
+        /* =====================================================
+           TESTING PANEL
+        ===================================================== */
+
+        .test-title {
+            font-size: 24px;
+            color: #173f5f;
+            margin-top: 0;
+        }
+
+        .selected-info {
+            background: #f1f7fc;
+            border-left: 4px solid #20639b;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            line-height: 1.8;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 90px;
+            resize: vertical;
+            padding: 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #20639b;
+            box-shadow: 0 0 0 2px rgba(32, 99, 155, 0.12);
+        }
+
+        /* =====================================================
+           EXAMPLES
+        ===================================================== */
+
+        .example-button {
+            background: none;
+            border: none;
+            padding: 5px 0;
+            color: #20639b;
+            cursor: pointer;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .example-button:hover {
+            text-decoration: underline;
+        }
+
+        .example-box {
+            display: none;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 7px;
+        }
+
+        .example-box button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            border: none;
+            background: white;
+            padding: 8px;
+            margin: 4px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: monospace;
+        }
+
+        .example-box button:hover {
+            background: #e8f1fa;
+        }
+
+        /* =====================================================
+           ANALYZE BUTTON
+        ===================================================== */
+
+        .analyze-button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #20639b;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .analyze-button:hover {
+            background: #173f5f;
+        }
+
+        /* =====================================================
+           RESULT
+        ===================================================== */
+
+        .result-card {
+            margin-top: 25px;
+            background: #f8fafc;
+            border: 1px solid #dbe4ee;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .result-card h3 {
+            margin-top: 0;
+            color: #173f5f;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .result-item {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .result-item strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #475569;
+        }
+
+        .success {
+            padding: 14px;
+            background: #ecfdf3;
+            border: 1px solid #a7f3d0;
+            border-radius: 8px;
+            color: #065f46;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .warning {
+            padding: 14px;
+            background: #fff8e7;
+            border: 1px solid #f5d98b;
+            border-radius: 8px;
+            margin-top: 20px;
+            color: #765b13;
+            line-height: 1.5;
+        }
+
+        .error {
+            padding: 14px;
+            background: #fff1f2;
+            border: 1px solid #fecdd3;
+            border-radius: 8px;
+            color: #9f1239;
+            margin-top: 15px;
+        }
+
+        /* =====================================================
+           TABLE
+        ===================================================== */
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #dbe4ee;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background: #edf4fa;
+            color: #173f5f;
+        }
+
+        /* =====================================================
+           BACK BUTTON
+        ===================================================== */
+
+        .back-button {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 10px 18px;
+            background: #e8eef5;
+            color: #173f5f;
+            text-decoration: none;
+            border-radius: 7px;
+            font-weight: bold;
+        }
+
+        /* =====================================================
+           HIDDEN
+        ===================================================== */
+
+        .hidden {
+            display: none;
+        }
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 800px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .container {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<div class="header">
+    <h1>🧬 DNA Insight Lab</h1>
+    <p>
+        Genetic Analysis & Educational Investigation
+    </p>
+</div>
+
+<div class="container">
+
+<!-- =========================================================
+     START MESSAGE
+========================================================= -->
+
+<div id="startMessage"
+     class="start-message">
+
+    <div class="start-icon">
+        🧬
+    </div>
+
+    <h2>
+        Let's start hehe! 👀
+    </h2>
+
+    <p>
+        Select a condition to begin your investigation.
+    </p>
+
+</div>
+
+<!-- =========================================================
+     CONDITION SELECTOR
+========================================================= -->
+
+<div class="selector-card">
+
+    <label for="conditionSelect">
+        🔬 Choose a condition to investigate
+    </label>
+
+    <select id="conditionSelect"
+            onchange="selectCondition(this.value)">
+
+        <option value="">
+            -- Select a condition to begin --
+        </option>
+
+        {% for condition in conditions %}
+
+        <option value="{{ condition.id }}">
+            {{ condition.name }}
+        </option>
+
+        {% endfor %}
+
+    </select>
+
+</div>
+
+<!-- =========================================================
+     CONDITION CONTENT
+========================================================= -->
+
+<div id="conditionContent"
+     class="hidden">
+
+<div class="main-grid">
+
+<!-- =========================================================
+     LEFT INFORMATION PANEL
+========================================================= -->
+
+<div class="card">
+
+    <div id="conditionTitle"
+         class="condition-title">
+    </div>
+
+    <div id="conditionBadge"
+         class="condition-badge">
+    </div>
+
+    <details>
+
+        <summary>
+            What is it?
+        </summary>
+
+        <p id="conditionDescription"></p>
+
+    </details>
+
+    <details>
+
+        <summary>
+            Gene / Genetics
+        </summary>
+
+        <p id="conditionGenetics"></p>
+
+    </details>
+
+    <details>
+
+        <summary>
+            How is it related to genetics?
+        </summary>
+
+        <p id="conditionAnalysis"></p>
+
+    </details>
+
+    <details>
+
+        <summary>
+            What are we testing?
+        </summary>
+
+        <p id="testingExplanation">
+            This is an educational DNA analysis
+            demonstration. It does not replace
+            clinical genetic testing.
+        </p>
+
+    </details>
+
+    <details>
+
+        <summary>
+            Important Note
+        </summary>
+
+        <p id="conditionNote"></p>
+
+    </details>
+
+</div>
+
+<!-- =========================================================
+     RIGHT TESTING PANEL
+========================================================= -->
+
+<div class="card">
+
+    <h2 class="test-title">
+        🔬 Genetic Investigation
+    </h2>
+
+    <div class="selected-info">
+
+        <strong>
+            Selected condition:
+        </strong>
+
+        <span id="selectedConditionName">
+        </span>
+
+        <br>
+
+        <strong>
+            Gene:
+        </strong>
+
+        <span id="selectedGene">
+        </span>
+
+    </div>
+
+    <!-- =====================================================
+         NORMAL DNA TEST
+    ===================================================== -->
+
+    <div id="normalTest">
+
+        <form id="geneticsForm"
+              onsubmit="analyzeDNA(event)">
+
+            <input type="hidden"
+                   name="condition_id"
+                   id="conditionIdInput">
+
+            <!-- REFERENCE -->
+
+            <div class="input-group">
+
+                <label>
+                    Reference DNA Sequence
+                </label>
+
+                <textarea
+                    id="referenceInput"
+                    name="reference"></textarea>
+
+                <button type="button"
+                        class="example-button"
+                        onclick="toggleExamples('referenceExamples')">
+
+                    💡 Need an example?
+
+                </button>
+
+                <div id="referenceExamples"
+                     class="example-box">
+                </div>
+
+            </div>
+
+            <!-- SAMPLE -->
+
+            <div class="input-group">
+
+                <label>
+                    Sample DNA Sequence
+                </label>
+
+                <textarea
+                    id="sampleInput"
+                    name="sample"></textarea>
+
+                <button type="button"
+                        class="example-button"
+                        onclick="toggleExamples('sampleExamples')">
+
+                    💡 Need an example?
+
+                </button>
+
+                <div id="sampleExamples"
+                     class="example-box">
+                </div>
+
+            </div>
+
+            <button type="submit"
+                    class="analyze-button">
+
+                🧬 Analyze DNA
+
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- =====================================================
+         MULTIFACTORIAL INFORMATION
+    ===================================================== -->
+
+    <div id="multifactorialMessage"
+         class="hidden">
+
+        <div class="warning">
+
+            <strong>
+                🧠 Educational Genetics Note
+            </strong>
+
+            <p id="multifactorialText"></p>
+
+            <p>
+                This condition is influenced by multiple
+                genetic, lifestyle and environmental factors.
+                A simple DNA sequence comparison cannot
+                diagnose it.
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- =====================================================
+         ANALYSIS RESULT
+    ===================================================== -->
+
+    <div id="analysisResult"
+         class="result-card hidden"
+         aria-live="polite">
+    </div>
+
+    <a href="/"
+       class="back-button">
+
+        ← Back to DNA Analyzer
+
+    </a>
+
+</div>
+
+</div>
+</div>
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+/*
+ * ========================================================
+ * CONDITION DATA
+ * ========================================================
+ */
+
+const conditionData = {
+
+    sickle_cell: {
+
+        name: "Sickle Cell Disease",
+
+        gene: "HBB",
+
+        type: "Inherited genetic condition",
+
+        description:
+            "Sickle cell disease is an inherited blood disorder that affects hemoglobin and red blood cells.",
+
+        genetics:
+            "Changes in the HBB gene can produce an altered form of hemoglobin.",
+
+        analysis:
+            "This case demonstrates how a small DNA change can change a codon and the amino acid produced from it.",
+
+        note:
+            "This is an educational example and is not a medical diagnostic test.",
+
+        reference: "",
+
+        sample: "",
+
+        referenceExamples: [
+            "GAG",
+            "GAGGAG",
+            "ATGGAGTAA"
+        ],
+
+        sampleExamples: [
+            "GTG",
+            "GTGGAG",
+            "ATGGTGTAA"
+        ]
+
+    },
+
+    cystic_fibrosis: {
+
+        name: "Cystic Fibrosis",
+
+        gene: "CFTR",
+
+        type: "Inherited genetic condition",
+
+        description:
+            "Cystic fibrosis is an inherited condition that can affect the lungs and digestive system.",
+
+        genetics:
+            "Changes in the CFTR gene can affect the function of the CFTR protein.",
+
+        analysis:
+            "This case demonstrates how comparing DNA sequences can help identify a genetic difference.",
+
+        note:
+            "Many different CFTR variants exist. This simplified case is only for educational demonstration.",
+
+        reference: "",
+
+        sample: "",
+referenceExamples: [
+    "ATGTTT",
+    "ATGTTTCCT",
+    "ATGATGTTTTAA"
+],
+
+sampleExamples: [
+    "ATGTT",
+    "ATGTTCT",
+    "ATGATGTTTAA"
+]
+
+    },
+
+    beta_thalassemia: {
+
+        name: "Beta-Thalassemia",
+
+        gene: "HBB",
+
+        type: "Inherited blood condition",
+
+        description:
+            "Beta-thalassemia affects the production of beta-globin, an important part of hemoglobin.",
+
+        genetics:
+            "Variants in the HBB gene can affect the production or function of beta-globin.",
+
+        analysis:
+            "The case demonstrates how a DNA sequence difference can be investigated using sequence comparison.",
+
+        note:
+            "This is a simplified educational case and does not represent clinical testing.",
+
+        reference: "",
+
+        sample: "",
+
+       referenceExamples: [
+    "ATGGAG",
+    "ATGGAGGCC",
+    "ATGATGGAGTAA"
+],
+
+sampleExamples: [
+    "ATGAG",
+    "ATGAGGCC",
+    "ATGATGAGTAA"
+]
+    },
+
+    pku: {
+
+        name: "Phenylketonuria (PKU)",
+
+        gene: "PAH",
+
+        type: "Inherited metabolic condition",
+
+        description:
+            "PKU is an inherited condition in which the body has difficulty processing the amino acid phenylalanine.",
+
+        genetics:
+            "Changes in the PAH gene can reduce the activity of the enzyme involved in processing phenylalanine.",
+
+        analysis:
+            "This case demonstrates how genetic changes can be connected to changes in biological processes.",
+
+        note:
+            "This is an educational demonstration and is not a diagnostic test.",
+
+        reference: "",
+
+        sample: "",
+
+        referenceExamples: [
+            "ATGCAA",
+            "ATGCAAGGC",
+            "ATGATGCAATAA"
+        ],
+
+        sampleExamples: [
+            "ATGCCA",
+            "ATGCCAGGC",
+            "ATGATGCCATAA"
+        ]
+
+    },
+
+    huntington: {
+
+        name: "Huntington Disease",
+
+        gene: "HTT",
+
+        type: "Inherited neurological condition",
+
+        description:
+            "Huntington disease is an inherited condition that affects the nervous system.",
+
+        genetics:
+            "It is associated with an expanded CAG repeat in the HTT gene.",
+
+        analysis:
+            "This case introduces the idea that genetic conditions can involve changes in repeated DNA sequences.",
+
+        note:
+            "This is a simplified educational representation and is not a clinical repeat-length test.",
+
+        reference: "",
+
+        sample: "",
+
+        referenceExamples: [
+            "CAGCAGCAG",
+            "CAGCAGCAGCAG",
+            "CAGCAGCAGCAGCAG"
+        ],
+
+        sampleExamples: [
+            "CAGCAGCAGCAG",
+            "CAGCAGCAGCAGCAG",
+            "CAGCAGCAGCAGCAGCAG"
+        ]
+
+    },
+
+    duchenne: {
+
+        name: "Duchenne Muscular Dystrophy",
+
+        gene: "DMD",
+
+        type: "Inherited muscle condition",
+
+        description:
+            "Duchenne muscular dystrophy is an inherited condition that causes progressive muscle weakness.",
+
+        genetics:
+            "Changes in the DMD gene can affect dystrophin, a protein important for muscle cells.",
+
+        analysis:
+            "This case demonstrates the relationship between genes and protein function.",
+
+        note:
+            "This is a simplified educational example and is not clinical testing.",
+
+        reference: "",
+
+        sample: "",
+
+        referenceExamples: [
+            "ATGGCC",
+            "ATGGCCGAA",
+            "ATGATGGCCTAA"
+        ],
+
+        sampleExamples: [
+            "ATGACC",
+            "ATGACCGAA",
+            "ATGATGACCTAA"
+        ]
+
+    },
+
+    hypertension: {
+
+        name: "High Blood Pressure",
+
+        gene: "Multiple genes",
+
+        type: "Multifactorial condition",
+
+        description:
+            "High blood pressure can be influenced by genetics, lifestyle, age, and environmental factors.",
+
+        genetics:
+            "There is no single DNA change that can be used by this application to diagnose high blood pressure.",
+
+        analysis:
+            "This case demonstrates that genetics can contribute to a condition while other factors also play important roles.",
+
+        note:
+            "This section is educational. DNA analysis cannot diagnose high blood pressure.",
+
+        reference: "",
+
+        sample: "",
+referenceExamples: ["ATGGCC", "ATGCGT", "ATGACCGG"],
+sampleExamples: ["ATGACC", "ATGCGC", "ATGACAGG"]
+    },
+
+    type2_diabetes: {
+
+        name: "Type 2 Diabetes",
+
+        gene: "Multiple genes",
+
+        type: "Multifactorial condition",
+
+        description:
+            "Type 2 diabetes is influenced by genetic, lifestyle, and environmental factors.",
+
+        genetics:
+            "Many genes can contribute to susceptibility, but there is no single DNA sequence that this application can use to diagnose type 2 diabetes.",
+
+        analysis:
+            "This case demonstrates the idea that genetics can influence disease risk together with lifestyle and environmental factors.",
+
+        note:
+            "This section is educational. DNA analysis cannot diagnose type 2 diabetes.",
+
+        reference: "",
+
+        sample: "",
+
+       referenceExamples: ["ATGGCC", "ATGCTG", "ATGACCGG"],
+sampleExamples: ["ATGGTC", "ATGCTA", "ATGACAGG"]
+    }
+
+};
+
+/*
+ * ========================================================
+ * GET CONDITION
+ * ========================================================
+ */
+
+function getCondition(id) {
+    return conditionData[id];
+}
+
+/*
+ * ========================================================
+ * SELECT CONDITION
+ * ========================================================
+ */
+
+function selectCondition(id) {
+
+    const startMessage =
+        document.getElementById("startMessage");
+
+    const conditionContent =
+        document.getElementById("conditionContent");
+
+    const normalTest =
+        document.getElementById("normalTest");
+
+    const multifactorialMessage =
+        document.getElementById("multifactorialMessage");
+
+    const result =
+        document.getElementById("analysisResult");
+
+    const referenceInput =
+        document.getElementById("referenceInput");
+
+    const sampleInput =
+        document.getElementById("sampleInput");
+
+    /*
+     * Selecting a condition never runs an analysis.
+     */
+
+    result.classList.add("hidden");
+    result.innerHTML = "";
+
+    referenceInput.value = "";
+    sampleInput.value = "";
+
+    document.getElementById(
+        "referenceExamples"
+    ).style.display = "none";
+
+    document.getElementById(
+        "sampleExamples"
+    ).style.display = "none";
+
+    if (!id) {
+
+        startMessage.style.display = "block";
+
+        conditionContent.classList.add("hidden");
+
+        return;
+    }
+
+    const condition = getCondition(id);
+
+    if (!condition) return;
+
+    startMessage.style.display = "none";
+
+    conditionContent.classList.remove("hidden");
+
+    normalTest.style.display = "block";
+
+    document.getElementById(
+        "conditionTitle"
+    ).textContent = condition.name;
+
+    document.getElementById(
+        "conditionBadge"
+    ).textContent = condition.type;
+
+    document.getElementById(
+        "conditionDescription"
+    ).textContent = condition.description;
+
+    document.getElementById(
+        "conditionGenetics"
+    ).textContent = condition.genetics;
+
+    document.getElementById(
+        "conditionAnalysis"
+    ).textContent = condition.analysis;
+
+    document.getElementById(
+        "conditionNote"
+    ).textContent = condition.note;
+
+    document.getElementById(
+        "selectedConditionName"
+    ).textContent = condition.name;
+
+    document.getElementById(
+        "selectedGene"
+    ).textContent = condition.gene;
+
+    document.getElementById(
+        "conditionIdInput"
+    ).value = id;
+
+    if (
+        id === "hypertension" ||
+        id === "type2_diabetes"
+    ) {
+
+        multifactorialMessage.classList.remove(
+            "hidden"
+        );
+
+        document.getElementById(
+            "multifactorialText"
+        ).textContent = condition.analysis;
+
+        document.getElementById(
+            "testingExplanation"
+        ).textContent =
+            "Click Analyze DNA to view the educational genetics context. This module does not diagnose a multifactorial condition from a DNA sequence.";
+
+    } else {
+
+        multifactorialMessage.classList.add(
+            "hidden"
+        );
+
+        document.getElementById(
+            "testingExplanation"
+        ).textContent =
+            id === "huntington"
+                ? "This educational demonstration counts CAG repeats. It is not a clinical repeat-length test."
+                : "This educational demonstration compares the reference and sample sequences. A sequence difference alone does not diagnose a disease.";
+    }
+
+    renderExamples(condition);
+}
+
+/*
+ * ========================================================
+ * RENDER EXAMPLES
+ * ========================================================
+ */
+
+function renderExamples(condition) {
+
+    const refBox =
+        document.getElementById(
+            "referenceExamples"
+        );
+
+    const sampleBox =
+        document.getElementById(
+            "sampleExamples"
+        );
+
+    refBox.innerHTML = "";
+
+    sampleBox.innerHTML = "";
+
+    (condition.referenceExamples || []).forEach(
+        seq => {
+
+            const b =
+                document.createElement("button");
+
+            b.type = "button";
+
+            b.textContent = seq;
+
+            b.onclick = () =>
+                useExample(
+                    "referenceInput",
+                    seq
+                );
+
+            refBox.appendChild(b);
+        }
+    );
+
+    (condition.sampleExamples || []).forEach(
+        seq => {
+
+            const b =
+                document.createElement("button");
+
+            b.type = "button";
+
+            b.textContent = seq;
+
+            b.onclick = () =>
+                useExample(
+                    "sampleInput",
+                    seq
+                );
+
+            sampleBox.appendChild(b);
+        }
+    );
+}
+
+/*
+ * ========================================================
+ * ANALYZE DNA
+ * ========================================================
+ */
+async function analyzeDNA(event) {
+
+    event.preventDefault();
+
+    const form = document.getElementById("geneticsForm");
+
+    const button = form.querySelector(".analyze-button");
+
+    const result = document.getElementById("analysisResult");
+
+    const conditionId =
+        document.getElementById("conditionIdInput").value;
+
+    if (!conditionId) return;
+
+    // Clean DNA input before analysis
+    const reference = document.getElementById("referenceInput");
+    const sample = document.getElementById("sampleInput");
+
+    reference.value =
+        reference.value.replace(/\s+/g, "").toUpperCase();
+
+    sample.value =
+        sample.value.replace(/\s+/g, "").toUpperCase();
+
+    button.disabled = true;
+    button.textContent = "⏳ Analyzing...";
+
+    result.classList.remove("hidden");
+
+    result.innerHTML =
+        "<h3>🧪 Analysis Result</h3><p>Running the educational analysis...</p>";
+
+    try {
+
+        const response = await fetch(
+            "/genetics/analyze",
+            {
+                method: "POST",
+                body: new FormData(form),
+                headers: {
+                    "Accept": "application/json"
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        renderAnalysisResult(data);
+
+    } catch (error) {
+
+        result.innerHTML =
+            '<h3>🧪 Analysis Result</h3><div class="error">Could not complete the analysis. Please try again.</div>';
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = "🧬 Analyze DNA";
+    }
+}
+/*
+ * ========================================================
+ * RENDER ANALYSIS RESULT
+ * ========================================================
+ */
+
+function renderAnalysisResult(data) {
+
+    const result =
+        document.getElementById(
+            "analysisResult"
+        );
+
+    result.classList.remove(
+        "hidden"
+    );
+
+    if (data.error) {
+
+        result.innerHTML =
+            `<h3>🧪 Analysis Result</h3>
+             <div class="error">
+                 ${escapeHtml(
+                     data.error_message ||
+                     "Invalid input."
+                 )}
+             </div>`;
+
+        return;
+    }
+
+    let html =
+        `<h3>🧪 Analysis Result</h3>`;
+
+    html +=
+        `<p>
+            <strong>Condition:</strong>
+            ${escapeHtml(data.condition)}
+            &nbsp;
+            <strong>Gene:</strong>
+            ${escapeHtml(data.gene)}
+        </p>`;
+
+    if (
+        data.special_type ===
+        "multifactorial"
+    ) {
+
+        /*
+         * No yellow educational result box here.
+         */
+
+        html += ``;
+
+    } else if (
+        data.special_type ===
+        "repeat"
+    ) {
+
+        html +=
+            `<div class="result-grid">
+
+                <div class="result-item">
+                    <strong>
+                        Reference CAG Repeats
+                    </strong>
+                    ${data.reference_repeats}
+                </div>
+
+                <div class="result-item">
+                    <strong>
+                        Sample CAG Repeats
+                    </strong>
+                    ${data.sample_repeats}
+                </div>
+
+                <div class="result-item">
+                    <strong>
+                        Difference
+                    </strong>
+                    ${data.repeat_difference}
+                </div>
+
+            </div>`;
+
+        html +=
+            `<div class="success">
+                🧬 ${escapeHtml(data.result)}
+             </div>`;
+
+    } else {
+
+        html +=
+            `<div class="result-grid">
+
+                <div class="result-item">
+                    <strong>
+                        Total Sequence Differences
+                    </strong>
+                    ${data.total_mutations}
+                </div>
+
+            </div>`;
+
+        if (
+            data.differences &&
+            data.differences.length
+        ) {
+
+            html +=
+                `<table>
+
+                    <thead>
+                        <tr>
+                            <th>Position</th>
+                            <th>Reference</th>
+                            <th>Sample</th>
+                            <th>Type</th>
+                            <th>Change</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>`;
+
+            data.differences.forEach(
+                m => {
+
+                    html +=
+                        `<tr>
+                            <td>
+                                ${m.position}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    m.reference
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    m.sample
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    m.type
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(
+                                    m.change
+                                )}
+                            </td>
+                        </tr>`;
+                }
+            );
+
+            html +=
+                `</tbody>
+                </table>`;
+
+        } else {
+
+            html +=
+                `<div class="success">
+                    ✅ No sequence differences detected.
+                 </div>`;
+        }
+
+        html +=
+            `<div class="warning">
+                ⚠️ This is an educational sequence comparison.
+                It does not diagnose
+                ${escapeHtml(data.condition)}.
+             </div>`;
+    }
+
+    result.innerHTML = html;
+
+    result.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+    });
+}
+
+/*
+ * ========================================================
+ * ESCAPE HTML
+ * ========================================================
+ */
+
+function escapeHtml(value) {
+
+    return String(
+        value ?? ""
+    ).replace(
+        /[&<>'"]/g,
+        c =>
+            ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                "'": "&#39;",
+                '"': "&quot;"
+            }[c])
+    );
+}
+
+/*
+ * ========================================================
+ * TOGGLE EXAMPLES
+ * ========================================================
+ */
+
+function toggleExamples(id) {
+
+    const box =
+        document.getElementById(id);
+
+    if (
+        box.style.display ===
+        "block"
+    ) {
+
+        box.style.display =
+            "none";
+
+    } else {
+
+        box.style.display =
+            "block";
+    }
+}
+
+/*
+ * ========================================================
+ * USE EXAMPLE
+ * ========================================================
+ */
+
+function useExample(
+    inputId,
+    sequence
+) {
+
+    document.getElementById(
+        inputId
+    ).value = sequence;
+}
+
+</script>
+
+</body>
+</html>

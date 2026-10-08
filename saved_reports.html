@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Saved Reports - DNA Insight Lab
+    </title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+
+        header {
+            background: #173b57;
+            color: white;
+            padding: 22px 40px;
+        }
+
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 40px auto;
+        }
+
+
+        .top-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+
+        .top-section h2 {
+            margin: 0;
+            color: #173b57;
+        }
+
+
+        .button {
+            display: inline-block;
+            padding: 10px 18px;
+            background: #173b57;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+
+        .button:hover {
+            background: #245a80;
+        }
+
+
+        .report-card {
+            background: white;
+            border-radius: 10px;
+            padding: 24px;
+            margin-bottom: 18px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        }
+
+
+        .report-card h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #173b57;
+        }
+
+
+        .report-info {
+            margin: 8px 0;
+            color: #555;
+        }
+
+
+        .open-button {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 17px;
+            background: #2d7d46;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+
+        .open-button:hover {
+            background: #236438;
+        }
+        .select-box {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #173b57;
+    font-weight: 600;
+}
+
+.select-box input {
+    width: 18px;
+    height: 18px;
+}
+
+
+        .empty-message {
+            background: white;
+            padding: 40px 30px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        }
+
+
+        .empty-message h3 {
+            color: #173b57;
+            margin-top: 0;
+        }
+
+
+        .empty-message p {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+
+        .back-links {
+            margin-top: 35px;
+            text-align: center;
+        }
+
+
+        .back-links a {
+            display: inline-block;
+            margin: 5px 8px;
+            padding: 9px 15px;
+            background: #173b57;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+
+        .back-links a:hover {
+            background: #245a80;
+        }
+
+
+        @media (max-width: 650px) {
+
+            header {
+                padding: 20px;
+            }
+
+            .container {
+                width: 94%;
+            }
+
+            .top-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>
+        🧬 DNA Insight Lab
+    </h1>
+
+</header>
+
+
+<div class="container">
+
+
+    <!-- PAGE TITLE -->
+
+    <div class="top-section">
+
+        <h2>
+            📁 Saved Reports
+        </h2>
+
+        <a
+            href="/dashboard"
+            class="button"
+        >
+            🏠 Dashboard
+        </a>
+
+    </div>
+
+
+    <!-- SAVED REPORTS -->
+
+    {% if saved_analyses %}
+
+        <form action="{{ url_for('generate_combined_report') }}" method="POST">
+
+{% for analysis in saved_analyses %}
+
+<div class="report-card">
+
+<h3>{{ analysis.title }}</h3>
+
+<p class="report-info">
+    <strong>Module:</strong> {{ analysis.module }}
+</p>
+
+<p class="report-info">
+    <strong>Saved on:</strong> {{ analysis.created_at }}
+</p>
+
+<label class="select-box">
+    <input
+        type="checkbox"
+        name="analysis_ids"
+        value="{{ analysis.id }}"
+    >
+    Include in Combined Report
+</label>
+
+<a
+    href="/report/view/{{ analysis.id }}"
+    class="open-button"
+>
+    🔎 Open Analysis
+</a>
+
+</div>
+
+{% endfor %}
+
+<button type="submit" class="button">
+    📊 Generate Combined Report
+</button>
+
+</form>
+
+
+    {% else %}
+
+
+        <!-- NO REPORTS -->
+
+        <div class="empty-message">
+
+            <h3>
+                No Saved Reports Yet
+            </h3>
+
+            <p>
+                Your saved DNA analyses will appear here.
+            </p>
+
+            <a
+                href="/"
+                class="button"
+            >
+                🧬 Start DNA Analysis
+            </a>
+
+        </div>
+
+
+    {% endif %}
+
+
+    <!-- BOTTOM LINKS -->
+
+    <div class="back-links">
+
+        <a href="/">
+            🧬 DNA Analyzer
+        </a>
+
+        <a href="/matching">
+            🔬 DNA Matching
+        </a>
+
+        <a href="/lab">
+            🧪 Virtual Lab
+        </a>
+
+        <a href="/genetics">
+            🧬 Genetics
+        </a>
+
+        <a href="/dashboard">
+            🏠 Dashboard
+        </a>
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,3841 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Virtual DNA Laboratory - DNA Insight Lab</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ====================================================== */
+        header {
+    background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.10), transparent 30%),
+        linear-gradient(135deg, #172554, #1e3a8a, #2563eb);
+
+    color: white;
+    padding: 38px 20px 34px;
+    text-align: center;
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.15);
+}
+
+header h1 {
+    margin: 0 0 10px;
+    font-size: 38px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+}
+
+header p {
+    margin: 0;
+    font-size: 16px;
+    opacity: 0.94;
+    line-height: 1.6;
+}
+        .top-navigation {
+    background: rgba(255, 255, 255, 0.96);
+    border-bottom: 1px solid #e2e8f0;
+    padding: 13px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+}
+
+.nav-button {
+    text-decoration: none;
+    padding: 10px 17px;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 700;
+    background: #f1f5f9;
+    color: #1e293b;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+}
+
+.nav-button:hover {
+    background: #e2e8f0;
+    transform: translateY(-1px);
+}
+
+.nav-button.primary {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 3px 8px rgba(37, 99, 235, 0.2);
+}
+
+.nav-button.primary:hover {
+    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    transform: translateY(-1px);
+}
+
+        /* =====================================================
+           MAIN CONTAINER
+        ====================================================== */
+
+        .container {
+    width: 94%;
+    max-width: 1120px;
+    margin: 32px auto;
+}
+
+
+        /* =====================================================
+           INTRO
+        ====================================================== */
+        .intro {
+    background: linear-gradient(145deg, #ffffff, #f8fbff);
+    padding: 28px;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 6px 22px rgba(15, 23, 42, 0.08);
+    margin-bottom: 25px;
+}
+
+.intro h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #1e3a8a;
+    font-size: 25px;
+}
+.intro p {
+    margin: 0;
+    color: #475569;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.note {
+    background: linear-gradient(135deg, #eff6ff, #f0f9ff);
+    border-left: 5px solid #2563eb;
+    padding: 15px 16px;
+    margin-top: 18px;
+    border-radius: 9px;
+    color: #334155;
+    line-height: 1.6;
+}
+
+
+        /* =====================================================
+           EXPERIMENT CARDS
+        ====================================================== */
+        .experiment {
+    background: linear-gradient(145deg, #ffffff, #f8fbff);
+    padding: 28px;
+    margin-bottom: 25px;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 6px 22px rgba(15, 23, 42, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.experiment:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.11);
+}
+
+        .experiment h2 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    color: #1e3a8a;
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.experiment h3 {
+    margin-top: 18px;
+    margin-bottom: 10px;
+    color: #1e3a8a;
+    font-size: 18px;
+    font-weight: 750;
+}
+
+        .experiment-number {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, #1e3a8a, #2563eb);
+    color: white;
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    box-shadow: 0 3px 8px rgba(30, 58, 138, 0.18);
+    letter-spacing: 0.2px;
+}
+
+
+        /* =====================================================
+           INPUTS
+        ====================================================== */
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin: 14px 0 7px;
+        }
+
+
+        textarea,
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: monospace;
+    background: #ffffff;
+    color: #1e293b;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+textarea:focus,
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+
+        textarea:focus,
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+        }
+
+
+        /* =====================================================
+           BUTTONS
+        ====================================================== */
+
+        .button-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+        button {
+            border: none;
+            padding: 11px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+
+        .primary-button,
+.analyze-btn {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.18);
+    transition: all 0.2s ease;
+}
+
+.primary-button:hover,
+.analyze-btn:hover {
+    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 15px rgba(37, 99, 235, 0.25);
+}
+
+        .secondary-button {
+    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+    color: #1e293b;
+    border: 1px solid #cbd5e1;
+    box-shadow: 0 3px 8px rgba(15, 23, 42, 0.06);
+    transition: all 0.2s ease;
+}
+
+.secondary-button:hover {
+    background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(15, 23, 42, 0.10);
+}
+        .save-button {
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 10px rgba(22, 163, 74, 0.18);
+    transition: all 0.2s ease;
+}
+
+.save-button:hover {
+    background: linear-gradient(135deg, #15803d, #166534);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 15px rgba(22, 163, 74, 0.24);
+}
+
+
+        .analyze-btn {
+            display: block;
+            margin: 20px auto 0;
+        }
+
+
+        /* =====================================================
+           EXAMPLES
+        ====================================================== */
+
+        .example-box,
+        .examples {
+            margin-top: 10px;
+            padding: 14px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+
+        .example-label,
+        .examples span {
+            display: block;
+            font-size: 14px;
+            color: #475569;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+
+        .example-box button,
+        .examples button {
+            margin: 5px 5px 5px 0;
+        }
+
+
+        /* =====================================================
+           EXPERIMENT INFORMATION
+        ====================================================== */
+
+        .experiment-info {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 18px;
+            margin: 18px 0;
+        }
+
+
+        .experiment-info h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+
+
+        .experiment-info h3:not(:first-child) {
+            margin-top: 18px;
+        }
+
+
+        /* =====================================================
+           RESULTS
+        ====================================================== */
+
+        .result {
+            margin-top: 24px;
+            padding: 24px;
+            background: #f8fafc;
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+        }
+
+
+        .result h3 {
+            margin-top: 0;
+            color: #1e3a8a;
+        }
+
+
+        .result-section {
+    background: linear-gradient(145deg, #ffffff, #f8fbff);
+    border: 1px solid #dbe5f0;
+    border-radius: 14px;
+    padding: 20px;
+    margin-top: 18px;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+}
+
+.result-section h4 {
+    margin-top: 0;
+    margin-bottom: 14px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+
+        .result-section h4 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            color: #1e3a8a;
+            font-size: 17px;
+        }
+
+
+        /* =====================================================
+           RESULT GRID
+        ====================================================== */
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(180px, 1fr)
+            );
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .result-card {
+    background: linear-gradient(145deg, #ffffff, #f8fafc);
+    border: 1px solid #dbe5f0;
+    border-radius: 11px;
+    padding: 16px;
+    box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.result-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 16px rgba(15, 23, 42, 0.08);
+}
+
+
+        .result-card strong {
+            display: block;
+            margin-bottom: 7px;
+            color: #475569;
+        }
+
+
+        .result-card .large-value {
+            display: block;
+            font-size: 22px;
+            font-weight: bold;
+            color: #172554;
+        }
+
+
+        /* =====================================================
+           SEQUENCE DISPLAY
+        ====================================================== */
+
+        .sequence-box {
+    background: linear-gradient(135deg, #0f172a, #172554);
+    color: #e2e8f0;
+    padding: 16px;
+    border-radius: 10px;
+    border: 1px solid #1e3a8a;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    word-break: break-all;
+    margin-top: 8px;
+    box-shadow: inset 0 0 18px rgba(37, 99, 235, 0.08);
+}
+
+
+        .change-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 10px;
+            padding: 18px;
+            margin-top: 12px;
+        }
+
+
+        .change-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1e3a8a;
+        }
+
+
+        .arrow {
+            font-size: 25px;
+            color: #64748b;
+        }
+
+
+        /* =====================================================
+           VARIANT CARDS
+        ====================================================== */
+
+        .variant-card {
+            background: white;
+            border: 1px solid #dbe3ea;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 18px;
+            box-shadow: 0 2px 8px rgba(15,23,42,0.04);
+        }
+
+
+        .variant-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+
+        .variant-number {
+            background: #1e3a8a;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+
+        .mutation-type {
+            background: #dbeafe;
+            color: #1e3a8a;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+
+        .effect-box {
+            background: #f8fafc;
+            border-left: 5px solid #2563eb;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 14px;
+        }
+
+
+        .effect-box strong {
+            color: #1e3a8a;
+        }
+
+
+        /* =====================================================
+           RESTRICTION RESULTS
+        ====================================================== */
+
+        .restriction-summary {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(200px, 1fr)
+            );
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+
+        .restriction-item {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 16px;
+        }
+
+
+        .restriction-item strong {
+            display: block;
+            color: #475569;
+            margin-bottom: 7px;
+        }
+
+
+        .restriction-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #172554;
+        }
+
+
+        .position-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+
+        .position-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+
+
+        /* =====================================================
+           ERROR / SUCCESS
+        ====================================================== */
+        .error {
+    background: linear-gradient(135deg, #fef2f2, #fff1f2);
+    border-left: 5px solid #dc2626;
+    padding: 15px 16px;
+    color: #991b1b;
+    border-radius: 9px;
+    box-shadow: 0 3px 10px rgba(220, 38, 38, 0.08);
+}
+
+        .success {
+    background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+    border-left: 5px solid #16a34a;
+    padding: 15px 16px;
+    color: #166534;
+    border-radius: 9px;
+    margin-top: 15px;
+    box-shadow: 0 3px 10px rgba(22, 163, 74, 0.08);
+}
+
+        /* =====================================================
+           SAVE REPORT
+        ====================================================== */
+
+        .save-area {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+
+        .save-form {
+            display: inline;
+        }
+
+
+        /* =====================================================
+           FASTA
+        ====================================================== */
+        .fasta-area {
+    background: linear-gradient(145deg, #f8fafc, #eff6ff);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #dbe5f0;
+    margin-top: 20px;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+}
+.fasta-label {
+    display: block;
+    margin: 14px 0 7px;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 700;
+}
+input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    border: 1px dashed #93c5fd;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #475569;
+    font-size: 13px;
+    box-sizing: border-box;
+}
+.fasta-title {
+    margin-top: 0;
+    margin-bottom: 8px;
+    color: #1e3a8a;
+    font-size: 18px;
+}
+
+        .status {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #475569;
+        }
+
+
+        .small-text {
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.6;
+    margin-top: 4px;
+}
+
+
+        /* =====================================================
+           CODON TABLE
+        ====================================================== */
+
+        .codon-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+
+        .codon-table th,
+        .codon-table td {
+            border: 1px solid #cbd5e1;
+            padding: 10px;
+            text-align: left;
+        }
+
+
+        .codon-table th {
+            background: #eff6ff;
+            color: #1e3a8a;
+        }
+
+
+        /* =====================================================
+           FOOTER NAVIGATION
+        ====================================================== */
+
+        .bottom-navigation {
+            text-align: center;
+            margin: 35px 0;
+            padding: 20px;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ====================================================== */
+        @media (max-width: 700px) {
+
+    header h1 {
+        font-size: 28px;
+    }
+
+    header {
+        padding: 30px 16px 28px;
+    }
+
+    .container {
+        width: 95%;
+    }
+
+    .intro {
+        padding: 20px;
+    }
+
+    .experiment {
+        padding: 18px;
+        margin-bottom: 18px;
+    }
+
+    .experiment h2 {
+        font-size: 21px;
+    }
+
+    .experiment h3 {
+        font-size: 17px;
+    }
+
+    .top-navigation {
+        position: static;
+        padding: 10px 14px;
+    }
+
+    .nav-button {
+        padding: 9px 13px;
+        font-size: 13px;
+    }
+
+    .position-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .button-area {
+        gap: 10px;
+    }
+
+}
+.lab-badge {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    font-size: 14px;
+    letter-spacing: 0.3px;
+}
+/* ==============================
+   AGAROSE GEL VISUALIZATION
+   ============================== */
+
+.gel-description {
+    margin: 8px 0 18px;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.gel-container {
+    margin-top: 20px;
+    padding: 24px;
+    border-radius: 18px;
+    background: #0f172a;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.18);
+    overflow-x: auto;
+}
+
+.gel-labels {
+    display: flex;
+    justify-content: center;
+    gap: 110px;
+    margin-bottom: 10px;
+    color: #e2e8f0;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.gel-lane-label {
+    width: 120px;
+    text-align: center;
+}
+
+.gel {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 70px;
+    min-height: 430px;
+    padding: 30px 45px;
+    border-radius: 14px;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08), transparent 25%),
+        radial-gradient(circle at 80% 70%, rgba(255,255,255,0.05), transparent 30%),
+        linear-gradient(135deg, #164e63, #0e7490, #155e75);
+    border: 1px solid rgba(255,255,255,0.18);
+    box-shadow:
+        inset 0 0 35px rgba(0,0,0,0.25),
+        0 8px 25px rgba(0,0,0,0.25);
+}
+
+.gel-wells {
+    position: absolute;
+    top: 8px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 190px;
+    pointer-events: none;
+}
+
+.well {
+    width: 105px;
+    height: 18px;
+    border-radius: 0 0 12px 12px;
+    background: rgba(2, 6, 23, 0.65);
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: inset 0 3px 8px rgba(0,0,0,0.4);
+}
+
+.gel-lane {
+    position: relative;
+    width: 120px;
+    height: 370px;
+    border-left: 1px solid rgba(255,255,255,0.08);
+    border-right: 1px solid rgba(255,255,255,0.08);
+}
+
+.ladder-lane {
+    position: relative;
+}
+
+.ladder-lane span {
+    position: absolute;
+    left: -65px;
+    transform: translateY(-50%);
+    width: 55px;
+    color: #cbd5e1;
+    font-size: 10px;
+    text-align: right;
+}
+
+.gel-band {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    height: 7px;
+    border-radius: 50%;
+    background: #f8fafc;
+    box-shadow:
+        0 0 5px rgba(255,255,255,0.95),
+        0 0 14px rgba(186,230,253,0.85),
+        0 0 25px rgba(125,211,252,0.55);
+    transform: translateY(-50%);
+}
+
+.sample-band {
+    left: 10px;
+    right: 10px;
+}
+
+.fragment-label {
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    color: #f8fafc;
+    font-size: 11px;
+    font-weight: 700;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.7);
+}
+
+.gel-note {
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #475569;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+@media (max-width: 700px) {
+
+    .gel-container {
+        padding: 16px;
+    }
+
+    .gel {
+        gap: 35px;
+        padding-left: 55px;
+        padding-right: 55px;
+    }
+
+    .gel-labels {
+        gap: 70px;
+    }
+
+    .gel-wells {
+        gap: 120px;
+    }
+
+}
+/* ==============================
+   LAB FEATURE STRIP
+   ============================== */
+
+.lab-feature-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.lab-feature-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: linear-gradient(135deg, #f8fafc, #eff6ff);
+    border: 1px solid #dbeafe;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lab-feature-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+.lab-feature-icon {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: white;
+    font-size: 21px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+}
+
+.lab-feature-card strong {
+    display: block;
+    color: #1e3a8a;
+    font-size: 14px;
+    margin-bottom: 3px;
+}
+
+.lab-feature-card span {
+    display: block;
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+@media (max-width: 700px) {
+
+    .lab-feature-strip {
+        grid-template-columns: 1fr;
+    }
+
+}
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+========================================================== -->
+
+<header>
+
+    <h1>🧬 Virtual DNA Laboratory</h1>
+
+    <p>
+        Explore DNA sequences through interactive
+        bioinformatics experiments
+    </p>
+    <div class="lab-badge">
+    🧪 Interactive Bioinformatics • DNA Analysis • Genetics
+</div>
+
+</header>
+
+
+<!-- =========================================================
+     NAVIGATION
+========================================================== -->
+
+<nav class="top-navigation">
+
+    <a
+        class="nav-button primary"
+        href="{{ url_for('dashboard') }}"
+    >
+        🏠 Back to Dashboard
+    </a>
+
+    <a
+        class="nav-button"
+        href="{{ url_for('saved_reports') }}"
+    >
+        💾 Saved Reports
+    </a>
+
+</nav>
+
+
+<div class="container">
+
+
+<!-- =========================================================
+     INTRO
+========================================================== -->
+
+<div class="intro">
+
+    <h2>Welcome to the Virtual DNA Laboratory</h2>
+
+    <p>
+        This laboratory allows you to experiment with
+        DNA sequences and observe how biological sequence
+        operations work.
+    </p>
+
+    <div class="note">
+
+        <strong>NOTE:</strong>
+
+        Enter DNA sequences using only
+        <strong>A, T, G and C</strong> unless the
+        experiment specifically asks for another input.
+
+    </div>
+    <div class="lab-feature-strip">
+
+    <div class="lab-feature-card">
+        <div class="lab-feature-icon">🔬</div>
+        <div>
+            <strong>Analyze DNA</strong>
+            <span>GC%, base counts &amp; sequence properties</span>
+        </div>
+    </div>
+
+    <div class="lab-feature-card">
+        <div class="lab-feature-icon">🧬</div>
+        <div>
+            <strong>Translate DNA</strong>
+            <span>DNA → RNA → Protein &amp; 6-frame ORFs</span>
+        </div>
+    </div>
+
+    <div class="lab-feature-card">
+        <div class="lab-feature-icon">🧪</div>
+        <div>
+            <strong>Simulate</strong>
+            <span>Mutations, restriction sites &amp; agarose gel</span>
+        </div>
+    </div>
+
+</div>
+
+
+    <!-- =====================================================
+         FASTA UPLOAD
+    ====================================================== -->
+
+    <div class="fasta-area">
+
+        <h3 class="fasta-title">📁 FASTA Sequence Loader</h3>
+
+        <p class="small-text">
+            Upload a FASTA file and send its DNA sequence
+            directly to one of the laboratory experiments.
+        </p>
+
+        <input
+            type="file"
+            id="fastaFile"
+            accept=".fasta,.fa,.txt"
+        >
+
+        <label for="fastaTarget" class="fasta-label">
+    Send sequence to:
+</label>
+
+        <select id="fastaTarget">
+
+            <option value="experiment2">
+                Experiment 2 - DNA Analysis
+            </option>
+
+            <option value="experiment3">
+                Experiment 3 - DNA to RNA to Protein
+            </option>
+
+            <option value="variantReference">
+                Experiment 4 - Reference Sequence
+            </option>
+
+            <option value="variantSample">
+                Experiment 4 - Sample Sequence
+            </option>
+
+            <option value="experiment5">
+                Experiment 5 - Restriction Sites
+            </option>
+
+            <option value="experiment6">
+                Experiment 6 - Interactive Mutation
+            </option>
+
+            <option value="experiment7">
+                Experiment 7 - Complement
+            </option>
+
+        </select>
+
+        <div class="button-area">
+
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="loadFASTA()"
+            >
+                Load FASTA Sequence
+            </button>
+
+        </div>
+
+        <div
+            id="fastaStatus"
+            class="status"
+        ></div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     EXPERIMENT 1
+========================================================== -->
+
+<div class="experiment">
+
+    <span class="experiment-number">
+        Experiment 1
+    </span>
+
+    <h2>🧪 DNA Extraction Simulation</h2>
+
+    <p>
+        Select a biological sample to simulate the
+        first stage of obtaining DNA for laboratory analysis.
+    </p>
+
+    <label for="sampleType">
+        Sample Type
+    </label>
+
+    <select id="sampleType">
+
+        <option value="saliva">
+            Saliva
+        </option>
+
+        <option value="blood">
+            Blood
+        </option>
+
+        <option value="buccal">
+            Buccal Cells
+        </option>
+
+    </select>
+
+    <div class="button-area">
+
+        <button
+            type="button"
+            class="primary-button"
+            onclick="runExtraction()"
+        >
+            🧪 Simulate Extraction
+        </button>
+
+    </div>
+
+    <div
+        id="extractionResult"
+        class="result"
+        style="display:none;"
+    ></div>
+
+</div>
+
+
+<!-- =========================================================
+     EXPERIMENT 2
+========================================================== -->
+
+<div class="experiment">
+
+    <span class="experiment-number">
+        Experiment 2
+    </span>
+
+    <h2>🔬 DNA Sequence Analysis</h2>
+
+    <p>
+        Analyze the composition and basic properties
+        of a DNA sequence.
+    </p>
+
+    <form
+        action="{{ url_for('lab_analyze') }}"
+        method="POST"
+    >
+
+        <label for="labSequence">
+            DNA Sequence
+        </label>
+
+        <textarea
+            name="sequence"
+            id="labSequence"
+            rows="5"
+            placeholder=""
+            required
+        ></textarea>
+
+        <div class="example-box">
+
+            <span class="example-label">
+                💡 Need an example? Choose one:
+            </span>
+
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="setSequence('labSequence', 'ATGGCCATTTAA')"
+            >
+                Example 1
+            </button>
+
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="setSequence('labSequence', 'ATGCGTACGTTAG')"
+            >
+                Example 2
+            </button>
+
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="setSequence('labSequence', 'ATGAAATAG')"
+            >
+                Example 3
+            </button>
+
+        </div>
+
+        <div class="button-area">
+
+            <button
+                type="submit"
+                class="primary-button"
+            >
+                🔬 Run DNA Analysis
+            </button>
+
+        </div>
+
+    </form>
+
+
+    {% if lab_result %}
+
+    <div class="result">
+
+        {% if lab_result.error %}
+
+            <div class="error">
+
+                <strong>Invalid input!</strong>
+
+                {{ lab_result.error_message }}
+
+            </div>
+
+        {% else %}
+
+            <h3>DNA Analysis Results</h3>
+
+            <div class="result-section">
+
+                <h4>🧬 Input DNA</h4>
+
+                <div class="sequence-box">
+                    {{ lab_result.sequence }}
+                </div>
+
+            </div>
+
+
+            <div class="result-grid">
+
+                {% if lab_result.length is defined %}
+
+                <div class="result-card">
+
+                    <strong>Sequence Length</strong>
+
+                    <span class="large-value">
+                        {{ lab_result.length }}
+                    </span>
+
+                    bases
+
+                </div>
+
+                {% endif %}
+
+
+                {% if lab_result.counts is defined %}
+
+                <div class="result-card">
+
+                    <strong>A Count</strong>
+
+                    <span class="large-value">
+                        {{ lab_result.counts["A"] }}
+                    </span>
+
+                </div>
+
+                <div class="result-card">
+
+                    <strong>T Count</strong>
+
+                    <span class="large-value">
+                        {{ lab_result.counts["T"] }}
+                    </span>
+
+                </div>
+
+                <div class="result-card">
+
+                    <strong>G Count</strong>
+
+                    <span class="large-value">
+                        {{ lab_result.counts["G"] }}
+                    </span>
+
+                </div>
+
+                <div class="result-card">
+
+                    <strong>C Count</strong>
+
+                    <span class="large-value">
+                        {{ lab_result.counts["C"] }}
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+
+                {% if lab_result.gc_percentage is defined %}
+
+                <div class="result-card">
+
+                    <strong>GC Content</strong>
+
+                    <span class="large-value">
+                        {{ lab_result.gc_percentage }}%
+                    </span>
+
+                </div>
+
+                {% elif lab_result.gc_content is defined %}
+
+                <div class="result-card">
+
+                    <strong>GC Content</strong>
+
+                    <span class="large-value">
+                        {{ lab_result.gc_content }}
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+
+                {% if lab_result.at_percentage is defined %}
+
+                <div class="result-card">
+
+                    <strong>AT Content</strong>
+
+                    <span class="large-value">
+                        {{ lab_result.at_percentage }}%
+                    </span>
+
+                </div>
+
+                {% elif lab_result.at_content is defined %}
+
+                <div class="result-card">
+
+                    <strong>AT Content</strong>
+
+                    <span class="large-value">
+                        {{ lab_result.at_content }}
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+
+            {% if lab_result.reverse_complement is defined %}
+
+            <div class="result-section">
+
+                <h4>🔄 Reverse Complement</h4>
+
+                <div class="sequence-box">
+                    {{ lab_result.reverse_complement }}
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+            <div class="save-area">
+
+                <form
+                    class="save-form"
+                    action="{{ url_for('save_analysis_report') }}"
+                    method="POST"
+                >
+
+                    <input
+                        type="hidden"
+                        name="module"
+                        value="lab dna analysis"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="title"
+                        value="Virtual Lab - DNA Sequence Analysis"
+                    >
+
+                    <textarea
+                        name="details"
+                        hidden
+                    >{{ lab_result | tojson }}</textarea>
+
+                    <button
+                        type="submit"
+                        class="save-button"
+                    >
+                        💾 Save Report
+                    </button>
+
+                </form>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+<!-- =========================================================
+     EXPERIMENT 3
+========================================================== -->
+
+<div class="experiment">
+
+    <span class="experiment-number">
+        Experiment 3
+    </span>
+
+    <h2>🧬 DNA → RNA → Protein</h2>
+
+    <p>
+        Observe how a DNA sequence is transcribed into RNA
+        and translated into a protein sequence.
+    </p>
+
+    <form
+        action="{{ url_for('lab_translation') }}"
+        method="POST"
+    >
+
+        <label for="translationSequence">
+            DNA Sequence
+        </label>
+
+        <textarea
+            name="sequence"
+            id="translationSequence"
+            rows="5"
+            placeholder=""
+            required
+        ></textarea>
+
+        <div class="example-box">
+
+            <span class="example-label">
+                💡 Need an example? Choose one:
+            </span>
+
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="setSequence('translationSequence', 'ATGGCCATTTAA')"
+            >
+                Example 1
+            </button>
+
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="setSequence('translationSequence', 'ATGAAATAG')"
+            >
+                Example 2
+            </button>
+
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="setSequence('translationSequence', 'ATGCGTACGTTAG')"
+            >
+                Example 3
+            </button>
+
+        </div>
+
+        <div class="button-area">
+
+            <button
+                type="submit"
+                class="primary-button"
+            >
+                ▶ Run Translation
+            </button>
+
+        </div>
+
+    </form>
+
+
+    {% if translation_result %}
+
+    <div class="result">
+
+        {% if translation_result.error %}
+
+            <div class="error">
+
+                <strong>Invalid input!</strong>
+
+                {{ translation_result.error_message }}
+
+            </div>
+
+        {% else %}
+
+            <h3>Translation Results</h3>
+
+            <div class="result-section">
+
+                <h4>1. DNA Sequence</h4>
+
+                <div class="sequence-box">
+                    {{ translation_result.dna }}
+                </div>
+
+            </div>
+
+
+            <div class="result-section">
+
+                <h4>2. RNA Sequence</h4>
+
+                <div class="sequence-box">
+                    {{ translation_result.rna }}
+                </div>
+
+            </div>
+
+
+            <div class="result-section">
+
+                <h4>3. Protein Sequence</h4>
+
+                <div class="sequence-box">
+                    {{ translation_result.protein }}
+                </div>
+
+            </div>
+
+
+            {% if translation_result.codons %}
+
+            <div class="result-section">
+
+                <h4>4. Codon Analysis</h4>
+
+                {% if translation_result.codons is iterable
+                      and translation_result.codons is not string %}
+
+                <table class="codon-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Codon</th>
+                            <th>Amino Acid</th>
+                            <th>Code</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for item in translation_result.codons %}
+
+                        <tr>
+
+                            <td>
+                                {{ item.codon }}
+                            </td>
+
+                            <td>
+                                {{ item.amino_acid_name }}
+                            </td>
+
+                            <td>
+                                {{ item.amino_acid }}
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+                {% else %}
+
+                    <p>
+                        {{ translation_result.codons }}
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+            {% endif %}
+
+{% if translation_result.orfs %}
+
+<div class="result-section">
+
+    <h4>5. Open Reading Frames</h4>
+
+    {% for orf in translation_result.orfs %}
+
+    <div class="result-card">
+
+        <strong>
+            ORF {{ loop.index }}
+        </strong>
+
+        <p>
+            Strand: {{ orf.strand }}
+        </p>
+
+        <p>
+            Reading Frame: {{ orf.frame }}
+        </p>
+
+        <p>
+            Start: {{ orf.start }}
+        </p>
+
+        <p>
+            End: {{ orf.end }}
+        </p>
+
+        <p>
+            Length: {{ orf.length }} bp
+        </p>
+
+        <div class="sequence-box">
+            {{ orf.sequence }}
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endif %}
+
+
+            <div class="save-area">
+
+                <form
+                    class="save-form"
+                    action="{{ url_for('save_analysis_report') }}"
+                    method="POST"
+                >
+
+                    <input
+                        type="hidden"
+                        name="module"
+                        value="lab translation"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="title"
+                        value="Virtual Lab - DNA Translation"
+                    >
+
+                    <textarea
+                        name="details"
+                        hidden
+                    >{{ translation_result | tojson }}</textarea>
+
+                    <button
+                        type="submit"
+                        class="save-button"
+                    >
+                        💾 Save Report
+                    </button>
+
+                </form>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+<!-- =========================================================
+     EXPERIMENT 4
+========================================================== -->
+
+<div class="experiment">
+
+    <span class="experiment-number">
+        Experiment 4
+    </span>
+
+    <h2>🧬 Variant / Mutation Analysis</h2>
+
+    <p>
+        Compare a reference DNA sequence with a sample
+        sequence to identify sequence differences and
+        examine their possible codon and amino-acid effects.
+    </p>
+
+
+    <label for="referenceSequence">
+        Reference DNA
+    </label>
+
+    <textarea
+        id="referenceSequence"
+        rows="4"
+        placeholder=""
+    ></textarea>
+
+
+    <div class="example-box">
+
+        <span class="example-label">
+            💡 Need an example? Choose one:
+        </span>
+
+        <button
+            type="button"
+            class="secondary-button"
+            onclick="setSequence('referenceSequence', 'ATGAAT')"
+        >
+            Example 1
+        </button>
+
+        <button
+            type="button"
+            class="secondary-button"
+            onclick="setSequence('referenceSequence', 'ATGGCC')"
+        >
+            Example 2
+        </button>
+
+        <button
+            type="button"
+            class="secondary-button"
+            onclick="setSequence('referenceSequence', 'ATGAAA')"
+        >
+            Example 3
+        </button>
+
+    </div>
+
+
+    <label for="sampleSequence">
+        Sample DNA
+    </label>
+
+    <textarea
+        id="sampleSequence"
+        rows="4"
+        placeholder=""
+    ></textarea>
+
+
+    <div class="example-box">
+
+        <span class="example-label">
+            💡 Need an example? Choose one:
+        </span>
+
+        <button
+            type="button"
+            class="secondary-button"
+            onclick="setSequence('sampleSequence', 'ATGAAG')"
+        >
+            Example 1
+        </button>
+
+        <button
+            type="button"
+            class="secondary-button"
+            onclick="setSequence('sampleSequence', 'ATGGCG')"
+        >
+            Example 2
+        </button>
+
+        <button
+            type="button"
+            class="secondary-button"
+            onclick="setSequence('sampleSequence', 'ATGACA')"
+        >
+            Example 3
+        </button>
+
+    </div>
+
+
+    <form
+        action="{{ url_for('lab_variant') }}"
+        method="POST"
+        onsubmit="prepareVariant()"
+    >
+
+        <input
+            type="hidden"
+            name="reference"
+            id="variantReferenceHidden"
+        >
+
+        <input
+            type="hidden"
+            name="sample"
+            id="variantSampleHidden"
+        >
+
+        <div class="button-area">
+
+            <button
+                type="submit"
+                class="primary-button"
+            >
+                🧬 Analyze Variant
+            </button>
+
+        </div>
+
+    </form>
+
+
+    {% if variant_result %}
+
+    <div class="result">
+
+        {% if variant_result.error %}
+
+            <div class="error">
+
+                <strong>Invalid input!</strong>
+
+                {{ variant_result.error_message }}
+
+            </div>
+
+        {% else %}
+
+            <h3>
+                🧬 Variant Analysis Results
+            </h3>
+
+
+            <div class="result-grid">
+
+                {% if variant_result.reference %}
+
+                <div class="result-card">
+
+                    <strong>
+                        Reference Sequence
+                    </strong>
+
+                    <div class="sequence-box">
+                        {{ variant_result.reference }}
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+
+                {% if variant_result.sample %}
+
+                <div class="result-card">
+
+                    <strong>
+                        Sample Sequence
+                    </strong>
+
+                    <div class="sequence-box">
+                        {{ variant_result.sample }}
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+
+                {% if variant_result.reference_length is defined %}
+
+                <div class="result-card">
+
+                    <strong>
+                        Reference Length
+                    </strong>
+
+                    <span class="large-value">
+                        {{ variant_result.reference_length }}
+                    </span>
+
+                    bases
+
+                </div>
+
+                {% endif %}
+
+
+                {% if variant_result.sample_length is defined %}
+
+                <div class="result-card">
+
+                    <strong>
+                        Sample Length
+                    </strong>
+
+                    <span class="large-value">
+                        {{ variant_result.sample_length }}
+                    </span>
+
+                    bases
+
+                </div>
+
+                {% endif %}
+
+
+                {% if variant_result.total_mutations is defined %}
+
+                <div class="result-card">
+
+                    <strong>
+                        Total Differences
+                    </strong>
+
+                    <span class="large-value">
+                        {{ variant_result.total_mutations }}
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+
+            {% if variant_result.differences %}
+
+            <div class="result-section">
+
+                <h4>
+                    🔎 Detected Variants
+                </h4>
+
+                <p>
+                    Each detected difference is displayed
+                    separately below.
+                </p>
+
+
+                {% for mutation in variant_result.differences %}
+
+                <div class="variant-card">
+
+                    <div class="variant-title">
+
+                        <span class="variant-number">
+                            Variant {{ loop.index }}
+                        </span>
+
+                        <span class="mutation-type">
+                            {{ mutation.type }}
+                        </span>
+
+                    </div>
+
+
+                    {% if mutation.position is defined %}
+
+                    <div class="result-grid">
+
+                        <div class="result-card">
+
+                            <strong>
+                                Position
+                            </strong>
+
+                            <span class="large-value">
+                                {{ mutation.position }}
+                            </span>
+
+                        </div>
+
+
+                        {% if mutation.reference is defined %}
+
+                        <div class="result-card">
+
+                            <strong>
+                                Reference Base
+                            </strong>
+
+                            <span class="large-value">
+                                {{ mutation.reference }}
+                            </span>
+
+                        </div>
+
+                        {% endif %}
+
+
+                        {% if mutation.sample is defined %}
+
+                        <div class="result-card">
+
+                            <strong>
+                                Sample Base
+                            </strong>
+
+                            <span class="large-value">
+                                {{ mutation.sample }}
+                            </span>
+
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+                    {% endif %}
+
+
+                    {% if mutation.change is defined %}
+
+                    <div class="result-section">
+
+                        <h4>
+                            🔄 Base Change
+                        </h4>
+
+                        <div class="change-box">
+
+                            <span class="change-value">
+                                {{ mutation.reference }}
+                            </span>
+
+                            <span class="arrow">
+                                →
+                            </span>
+
+                            <span class="change-value">
+                                {{ mutation.sample }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    {% endif %}
+
+
+                    {% if mutation.reference_codon is defined
+                          or mutation.sample_codon is defined %}
+
+                    <div class="result-section">
+
+                        <h4>
+                            🧬 Codon Information
+                        </h4>
+
+                        <div class="result-grid">
+
+                            {% if mutation.reference_codon is defined %}
+
+                            <div class="result-card">
+
+                                <strong>
+                                    Reference Codon
+                                </strong>
+
+                                <span class="large-value">
+                                    {{ mutation.reference_codon }}
+                                </span>
+
+                            </div>
+
+                            {% endif %}
+
+
+                            {% if mutation.sample_codon is defined %}
+
+                            <div class="result-card">
+
+                                <strong>
+                                    Sample Codon
+                                </strong>
+
+                                <span class="large-value">
+                                    {{ mutation.sample_codon }}
+                                </span>
+
+                            </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    {% endif %}
+
+
+                    {% if mutation.reference_amino_acid is defined
+                          or mutation.sample_amino_acid is defined
+                          or mutation.effect is defined %}
+
+                    <div class="result-section">
+
+                        <h4>
+                            🧪 Amino Acid Effect
+                        </h4>
+
+                        <div class="result-grid">
+
+                            {% if mutation.reference_amino_acid is defined %}
+
+                            <div class="result-card">
+
+                                <strong>
+                                    Reference Amino Acid
+                                </strong>
+
+                                <span class="large-value">
+                                    {{ mutation.reference_amino_acid }}
+                                </span>
+
+                            </div>
+
+                            {% endif %}
+
+
+                            {% if mutation.sample_amino_acid is defined %}
+
+                            <div class="result-card">
+
+                                <strong>
+                                    Sample Amino Acid
+                                </strong>
+
+                                <span class="large-value">
+                                    {{ mutation.sample_amino_acid }}
+                                </span>
+
+                            </div>
+
+                            {% endif %}
+
+
+                            {% if mutation.reference_amino_acid_name is defined %}
+
+                            <div class="result-card">
+
+                                <strong>
+                                    Reference Amino Acid Name
+                                </strong>
+
+                                <span class="large-value">
+                                    {{ mutation.reference_amino_acid_name }}
+                                </span>
+
+                            </div>
+
+                            {% endif %}
+
+
+                            {% if mutation.sample_amino_acid_name is defined %}
+
+                            <div class="result-card">
+
+                                <strong>
+                                    Sample Amino Acid Name
+                                </strong>
+
+                                <span class="large-value">
+                                    {{ mutation.sample_amino_acid_name }}
+                                </span>
+
+                            </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        {% if mutation.effect is defined %}
+
+                        <div class="effect-box">
+
+                            <strong>
+                                Effect:
+                            </strong>
+
+                            {{ mutation.effect }}
+
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+                    {% endif %}
+
+
+                    {% if mutation.codon_effect is defined %}
+
+                    <div class="effect-box">
+
+                        <strong>
+                            Codon Effect:
+                        </strong>
+
+                        {{ mutation.codon_effect }}
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+            {% else %}
+
+            <div class="result-section">
+
+                <h4>
+                    No Differences Detected
+                </h4>
+
+                <div class="success">
+
+                    The reference and sample sequences
+                    are identical.
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+            <div class="save-area">
+
+                <form
+                    class="save-form"
+                    action="{{ url_for('save_analysis_report') }}"
+                    method="POST"
+                >
+
+                    <input
+                        type="hidden"
+                        name="module"
+                        value="lab variant analysis"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="title"
+                        value="Virtual Lab - Variant Analysis"
+                    >
+
+                    <textarea
+                        name="details"
+                        hidden
+                    >{{ variant_result | tojson }}</textarea>
+
+                    <button
+                        type="submit"
+                        class="save-button"
+                    >
+                        💾 Save Report
+                    </button>
+
+                </form>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+<!-- =========================================================
+     EXPERIMENT 5
+========================================================== -->
+
+<div class="experiment">
+
+    <span class="experiment-number">
+        Experiment 5
+    </span>
+
+    <h2>✂️ Restriction Site Analysis</h2>
+
+    <p>
+        Search a DNA sequence for recognition sites of
+        selected restriction enzymes.
+    </p>
+
+    <form
+        action="{{ url_for('lab_restriction') }}"
+        method="POST"
+    >
+
+        <label for="restrictionSequence">
+            DNA Sequence
+        </label>
+
+        <textarea
+            name="sequence"
+            id="restrictionSequence"
+            rows="5"
+            placeholder=""
+            required
+        ></textarea>
+
+
+        <div class="example-box">
+
+            <span class="example-label">
+                💡 Need an example? Choose one:
+            </span>
+
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="setSequence('restrictionSequence', 'GAATTCGGATCC')"
+            >
+                Example 1
+            </button>
+
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="setSequence('restrictionSequence', 'AAGCTTGAATTC')"
+            >
+                Example 2
+            </button>
+
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="setSequence('restrictionSequence', 'GAATTCGAATTC')"
+            >
+                Example 3
+            </button>
+
+        </div>
+
+
+        <label for="enzyme">
+            Restriction Enzyme
+        </label>
+
+        <select
+            name="enzyme"
+            id="enzyme"
+        >
+
+            <option value="EcoRI">
+                EcoRI
+            </option>
+
+            <option value="BamHI">
+                BamHI
+            </option>
+
+            <option value="HindIII">
+                HindIII
+            </option>
+
+        </select>
+
+
+        <div class="button-area">
+
+            <button
+                type="submit"
+                class="primary-button"
+            >
+                ✂️ Find Restriction Sites
+            </button>
+
+        </div>
+
+    </form>
+
+
+    {% if restriction_result %}
+
+    <div class="result">
+
+        {% if restriction_result.error %}
+
+            <div class="error">
+
+                <strong>Invalid input!</strong>
+
+                {{ restriction_result.error_message }}
+
+            </div>
+
+        {% else %}
+
+            <h3>
+                ✂️ Restriction Analysis Results
+            </h3>
+
+
+            <div class="result-section">
+
+                <h4>
+                    🧬 DNA Sequence
+                </h4>
+
+                <div class="sequence-box">
+                    {{ restriction_result.sequence }}
+                </div>
+
+            </div>
+
+
+            <div class="restriction-summary">
+
+                <div class="restriction-item">
+
+                    <strong>
+                        🔬 Restriction Enzyme
+                    </strong>
+
+                    <span class="restriction-value">
+                        {{ restriction_result.enzyme }}
+                    </span>
+
+                </div>
+
+
+                <div class="restriction-item">
+
+                    <strong>
+                        🔗 Recognition Site
+                    </strong>
+
+                    <span class="restriction-value">
+                        {{ restriction_result.recognition_site }}
+                    </span>
+
+                </div>
+
+
+                <div class="restriction-item">
+
+                    <strong>
+                        ✂️ Sites Found
+                    </strong>
+
+                    <span class="restriction-value">
+                        {{ restriction_result.site_count }}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="result-section">
+
+                <h4>
+                    📍 Site Positions
+                </h4>
+
+
+                {% if restriction_result.positions %}
+
+                <div class="position-list">
+
+                    {% for position in restriction_result.positions %}
+
+                    <div class="position-item">
+
+                        <span>
+                            Site {{ loop.index }}
+                        </span>
+
+                        <strong>
+                            Position {{ position }}
+                        </strong>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+                {% else %}
+
+                <div class="success">
+
+                    No {{ restriction_result.enzyme }}
+                    recognition sites were found in this sequence.
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- Agarose Gel Visualization -->
+
+            <div class="result-section">
+
+                <h4>
+                    🧪 Agarose Gel Simulation
+                </h4>
+
+                <p class="gel-description">
+                    Simulated electrophoresis pattern based on the
+                    calculated restriction fragments.
+                    Smaller DNA fragments migrate farther through the gel.
+                </p>
+
+                <div class="gel-container">
+
+                    <div class="gel-labels">
+
+                        <div class="gel-lane-label">
+                            DNA Ladder
+                        </div>
+
+                        <div class="gel-lane-label">
+                            Sample
+                        </div>
+
+                    </div>
+
+                    <div class="gel">
+
+                        <div class="gel-wells">
+
+                            <div class="well"></div>
+                            <div class="well"></div>
+
+                        </div>
+
+                        <div class="gel-lane ladder-lane">
+
+                            <span style="top: 12%;">
+                                1500 bp
+                            </span>
+
+                            <span style="top: 28%;">
+                                1000 bp
+                            </span>
+
+                            <span style="top: 44%;">
+                                700 bp
+                            </span>
+
+                            <span style="top: 60%;">
+                                500 bp
+                            </span>
+
+                            <span style="top: 76%;">
+                                300 bp
+                            </span>
+
+                            <div class="gel-band" style="top: 12%;"></div>
+                            <div class="gel-band" style="top: 28%;"></div>
+                            <div class="gel-band" style="top: 44%;"></div>
+                            <div class="gel-band" style="top: 60%;"></div>
+                            <div class="gel-band" style="top: 76%;"></div>
+
+                        </div>
+
+                        <div class="gel-lane sample-lane">
+
+                            {% for fragment in restriction_result.fragment_sizes %}
+
+                            <div
+                                class="gel-band sample-band"
+                                data-fragment="{{ fragment }}"
+                            >
+                                <span class="fragment-label">
+                                    {{ fragment }} bp
+                                </span>
+                            </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="gel-note">
+                    💡 <strong>How to read the gel:</strong>
+                    Larger DNA fragments remain closer to the wells,
+                    while smaller fragments migrate farther down the gel.
+                </div>
+
+            </div>
+
+
+            <div class="save-area">
+
+                <form
+                    class="save-form"
+                    action="{{ url_for('save_analysis_report') }}"
+                    method="POST"
+                >
+
+                    <input
+                        type="hidden"
+                        name="module"
+                        value="lab restriction analysis"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="title"
+                        value="Virtual Lab - Restriction Site Analysis"
+                    >
+
+                    <textarea
+                        name="details"
+                        hidden
+                    >{{ restriction_result | tojson }}</textarea>
+
+                    <button
+                        type="submit"
+                        class="save-button"
+                    >
+                        💾 Save Report
+                    </button>
+
+                </form>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+<!-- =========================================================
+     EXPERIMENT 6
+     INTERACTIVE MUTATION
+========================================================== -->
+
+<div class="experiment">
+
+    <span class="experiment-number">
+        Experiment 6
+    </span>
+
+    <h2>🧬 Interactive Mutation Simulation</h2>
+
+    <p>
+        Explore how different types of mutations change a DNA sequence.
+        Choose a mutation type, select a position, and observe the
+        resulting sequence.
+    </p>
+
+
+    <div class="note">
+
+        <strong>NOTE:</strong>
+
+        This is an educational simulation of DNA sequence changes.
+        It does not provide medical or clinical diagnosis.
+
+    </div>
+
+
+    <div class="experiment-info">
+
+        <h3>🎯 Objective</h3>
+
+        <p>
+            To understand how substitutions, insertions and deletions
+            change a DNA sequence.
+        </p>
+
+
+        <h3>📖 How it works</h3>
+
+        <p>
+            Enter a DNA sequence, choose a mutation type, specify the
+            position, and run the experiment. The laboratory will show
+            the original and mutated sequences along with the exact change.
+        </p>
+
+    </div>
+
+
+    <form
+        action="{{ url_for('lab_mutation') }}"
+        method="POST"
+    >
+
+        <label for="mutationSequence">
+            DNA Sequence
+        </label>
+
+        <textarea
+            id="mutationSequence"
+            name="mutationSequence"
+            rows="4"
+            placeholder=""
+        ></textarea>
+
+
+        <div class="examples">
+
+            <span>
+                Need an example?
+            </span>
+
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="setSequence('mutationSequence', 'ATGCGTAC')"
+            >
+                Example 1
+            </button>
+
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="setSequence('mutationSequence', 'ATGAAT')"
+            >
+                Example 2
+            </button>
+
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="setSequence('mutationSequence', 'AAGCTTGAATTC')"
+            >
+                Example 3
+            </button>
+
+        </div>
+
+
+        <label for="mutationType">
+            Mutation Type
+        </label>
+
+        <select
+            id="mutationType"
+            name="mutationType"
+            onchange="updateMutationFields()"
+        >
+
+            <option value="">
+                Let's start hehe ✨
+            </option>
+
+            <option value="substitution">
+                Substitution
+            </option>
+
+            <option value="insertion">
+                Insertion
+            </option>
+
+            <option value="deletion">
+                Deletion
+            </option>
+
+        </select>
+
+
+        <label for="mutationPosition">
+            Position
+        </label>
+
+        <input
+            type="number"
+            id="mutationPosition"
+            name="mutationPosition"
+            min="1"
+            placeholder=""
+        >
+
+
+        <div class="examples">
+
+            <span>
+                Need an example?
+            </span>
+
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="document.getElementById('mutationPosition').value='3'"
+            >
+                Position 3
+            </button>
+
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="document.getElementById('mutationPosition').value='4'"
+            >
+                Position 4
+            </button>
+
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="document.getElementById('mutationPosition').value='6'"
+            >
+                Position 6
+            </button>
+
+        </div>
+
+
+        <div id="mutationBaseArea">
+
+            <label for="mutationBase">
+                Replacement / Inserted Base
+            </label>
+
+            <input
+                type="text"
+                id="mutationBase"
+                name="mutationBase"
+                maxlength="1"
+                placeholder=""
+                style="text-transform: uppercase;"
+            >
+
+
+            <div class="examples">
+
+                <span>
+                    Need an example?
+                </span>
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    onclick="document.getElementById('mutationBase').value='A'"
+                >
+                    A
+                </button>
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    onclick="document.getElementById('mutationBase').value='G'"
+                >
+                    G
+                </button>
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    onclick="document.getElementById('mutationBase').value='C'"
+                >
+                    C
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="analyze-btn"
+        >
+            🧬 Run Mutation
+        </button>
+
+    </form>
+
+
+    {% if mutation_result is defined %}
+
+        {% if mutation_result.error %}
+
+            <div class="result error">
+
+                <strong>Invalid input!</strong>
+
+                {{ mutation_result.message
+                   |replace("Invalid input! ", "")
+                   |replace("Invalid input!", "") }}
+
+            </div>
+
+        {% else %}
+
+            <div class="result">
+
+                <h3>
+                    🧬 Mutation Simulation Results
+                </h3>
+
+
+                <div class="result-section">
+
+                    <h4>
+                        1. Mutation Type
+                    </h4>
+
+                    <div class="sequence-box">
+                        {{ mutation_result.mutation_type }}
+                    </div>
+
+                </div>
+
+
+                <div class="result-section">
+
+                    <h4>
+                        2. Original DNA Sequence
+                    </h4>
+
+                    <div class="sequence-box">
+                        {{ mutation_result.original_sequence }}
+                    </div>
+
+                </div>
+
+
+                <div class="result-section">
+
+                    <h4>
+                        3. Mutated DNA Sequence
+                    </h4>
+
+                    <div class="sequence-box">
+                        {{ mutation_result.mutated_sequence }}
+                    </div>
+
+                </div>
+
+
+                <div class="result-section">
+
+                    <h4>
+                        4. Mutation Position
+                    </h4>
+
+                    <div class="result-card">
+
+                        <strong>
+                            Position
+                        </strong>
+
+                        <span class="large-value">
+                            {{ mutation_result.position }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="result-section">
+
+                    <h4>
+                        5. Base Change
+                    </h4>
+
+                    <div class="change-box">
+
+                        <strong>
+                            {{ mutation_result.original_base }}
+                        </strong>
+
+                        <span class="arrow">
+                            →
+                        </span>
+
+                        <strong>
+                            {{ mutation_result.new_base }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="result-section">
+
+                    <h4>
+                        6. Interpretation
+                    </h4>
+
+                    <div class="effect-box">
+
+                        {{ mutation_result.description }}
+
+                    </div>
+
+                </div>
+
+
+                <div class="success">
+
+                    ✅ Mutation simulation completed successfully.
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    {% endif %}
+
+</div>
+
+
+<!-- =========================================================
+     EXPERIMENT 7
+========================================================== -->
+<div class="experiment">
+
+    <span class="experiment-number">
+        Experiment 7
+    </span>
+
+    <h2>🔄 Complement & Reverse Complement</h2>
+
+    <p>
+        Explore the complementary DNA strand and its
+        reverse complement.
+    </p>
+
+
+    <form
+        action="{{ url_for('lab_complement') }}"
+        method="POST"
+    >
+
+        <label for="complementSequence">
+            DNA Sequence
+        </label>
+
+        <textarea
+            name="sequence"
+            id="complementSequence"
+            rows="5"
+            placeholder=""
+            required
+        ></textarea>
+
+
+        <div class="example-box">
+
+            <span class="example-label">
+                💡 Need an example? Choose one:
+            </span>
+
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="setSequence('complementSequence', 'ATGGCC')"
+            >
+                Example 1
+            </button>
+
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="setSequence('complementSequence', 'ATGAAT')"
+            >
+                Example 2
+            </button>
+
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="setSequence('complementSequence', 'AAGCTT')"
+            >
+                Example 3
+            </button>
+
+        </div>
+
+
+        <div class="button-area">
+
+            <button
+                type="submit"
+                class="primary-button"
+            >
+                🔄 Generate Complement
+            </button>
+
+        </div>
+
+    </form>
+
+
+    {% if complement_result %}
+
+    <div class="result">
+
+        {% if complement_result.error %}
+
+            <div class="error">
+
+                <strong>Invalid input!</strong>
+
+                {{ complement_result.error_message }}
+
+            </div>
+
+        {% else %}
+
+            <h3>
+                Complement Results
+            </h3>
+
+
+            <div class="result-section">
+
+                <h4>
+                    Complement
+                </h4>
+
+                <div class="sequence-box">
+                    {{ complement_result.complement }}
+                </div>
+
+            </div>
+
+
+            <div class="result-section">
+
+                <h4>
+                    Reverse Complement
+                </h4>
+
+                <div class="sequence-box">
+                    {{ complement_result.reverse_complement }}
+                </div>
+
+            </div>
+
+
+            <div class="save-area">
+
+                <form
+                    class="save-form"
+                    action="{{ url_for('save_analysis_report') }}"
+                    method="POST"
+                >
+
+                    <input
+                        type="hidden"
+                        name="module"
+                        value="lab complement"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="title"
+                        value="Virtual Lab - Complement Analysis"
+                    >
+
+                    <textarea
+                        name="details"
+                        hidden
+                    >{{ complement_result | tojson }}</textarea>
+
+                    <button
+                        type="submit"
+                        class="save-button"
+                    >
+                        💾 Save Report
+                    </button>
+
+                </form>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+</div>
+<!-- =========================================================
+     BOTTOM NAVIGATION
+========================================================== -->
+
+<div class="bottom-navigation">
+
+    <a
+        class="nav-button primary"
+        href="{{ url_for('dashboard') }}"
+    >
+        🏠 Back to Dashboard
+    </a>
+
+    <a
+        class="nav-button"
+        href="{{ url_for('saved_reports') }}"
+    >
+        💾 Saved Reports
+    </a>
+
+</div>
+
+
+</div>
+
+
+<script>
+
+
+/* =========================================================
+   SET SEQUENCE
+========================================================= */
+
+function setSequence(elementId, sequence) {
+
+    const element =
+        document.getElementById(elementId);
+
+    if (element) {
+
+        element.value = sequence;
+
+        element.focus();
+
+    }
+
+}
+
+
+/* =========================================================
+   PREPARE VARIANT FORM
+
+   DO NOT REMOVE THIS.
+   Experiment 4 uses visible textareas and sends their
+   values through hidden form fields to Flask.
+========================================================= */
+
+function prepareVariant() {
+
+    const referenceElement =
+        document.getElementById(
+            "referenceSequence"
+        );
+
+    const sampleElement =
+        document.getElementById(
+            "sampleSequence"
+        );
+
+
+    const reference =
+        referenceElement.value
+            .trim()
+            .toUpperCase();
+
+
+    const sample =
+        sampleElement.value
+            .trim()
+            .toUpperCase();
+
+
+    document.getElementById(
+        "variantReferenceHidden"
+    ).value = reference;
+
+
+    document.getElementById(
+        "variantSampleHidden"
+    ).value = sample;
+
+}
+
+
+/* =========================================================
+   MUTATION FIELD CONTROL
+
+   Substitution → base required
+   Insertion     → base required
+   Deletion      → base not required
+========================================================= */
+
+function updateMutationFields() {
+
+    const mutationType =
+        document.getElementById(
+            "mutationType"
+        ).value;
+
+
+    const mutationBaseArea =
+        document.getElementById(
+            "mutationBaseArea"
+        );
+
+
+    const mutationBase =
+        document.getElementById(
+            "mutationBase"
+        );
+
+
+    if (mutationType === "deletion") {
+
+        mutationBaseArea.style.display = "none";
+
+        mutationBase.value = "";
+
+    }
+
+    else if (
+        mutationType === "substitution" ||
+        mutationType === "insertion"
+    ) {
+
+        mutationBaseArea.style.display = "block";
+
+    }
+
+    else {
+
+        mutationBaseArea.style.display = "block";
+
+    }
+
+}
+
+
+/* =========================================================
+   DNA EXTRACTION SIMULATION
+========================================================= */
+
+function runExtraction() {
+
+    const sample =
+        document.getElementById(
+            "sampleType"
+        ).value;
+
+
+    const result =
+        document.getElementById(
+            "extractionResult"
+        );
+
+
+    let message = "";
+
+
+    if (sample === "saliva") {
+
+        message =
+            "<h3>Saliva DNA Extraction</h3>" +
+            "<p>" +
+            "Cells from the saliva sample are collected, " +
+            "broken open and processed to release DNA." +
+            "</p>" +
+            "<div class='success'>" +
+            "DNA sample successfully simulated." +
+            "</div>";
+
+    }
+
+
+    else if (sample === "blood") {
+
+        message =
+            "<h3>Blood DNA Extraction</h3>" +
+            "<p>" +
+            "A blood sample is processed to obtain " +
+            "DNA-containing cells for further analysis." +
+            "</p>" +
+            "<div class='success'>" +
+            "DNA sample successfully simulated." +
+            "</div>";
+
+    }
+
+
+    else {
+
+        message =
+            "<h3>Buccal Cell DNA Extraction</h3>" +
+            "<p>" +
+            "Cells collected from the inside of the cheek " +
+            "are processed to release DNA." +
+            "</p>" +
+            "<div class='success'>" +
+            "DNA sample successfully simulated." +
+            "</div>";
+
+    }
+
+
+    result.innerHTML = message;
+
+    result.style.display = "block";
+
+}
+
+
+/* =========================================================
+   FASTA LOADER
+========================================================= */
+
+function loadFASTA() {
+
+    const fileInput =
+        document.getElementById(
+            "fastaFile"
+        );
+
+
+    const target =
+        document.getElementById(
+            "fastaTarget"
+        ).value;
+
+
+    const status =
+        document.getElementById(
+            "fastaStatus"
+        );
+
+
+    if (!fileInput.files.length) {
+
+        status.textContent =
+            "Please select a FASTA file first.";
+
+        return;
+
+    }
+
+
+    const file =
+        fileInput.files[0];
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload = function(event) {
+
+        let text =
+            event.target.result;
+
+
+        const lines =
+            text.split(/\r?\n/);
+
+
+        let sequence = "";
+
+
+        for (const line of lines) {
+
+            const trimmed =
+                line.trim();
+
+
+            if (!trimmed) {
+                continue;
+            }
+
+
+            if (trimmed.startsWith(">")) {
+                continue;
+            }
+
+
+            sequence += trimmed;
+
+        }
+
+
+        sequence =
+            sequence
+                .replace(/\s/g, "")
+                .toUpperCase();
+
+
+        if (!sequence) {
+
+            status.textContent =
+                "No DNA sequence was found in the file.";
+
+            return;
+
+        }
+
+
+        if (!/^[ATGC]+$/.test(sequence)) {
+
+            status.textContent =
+                "Invalid FASTA sequence. Only A, T, G and C are supported.";
+
+            return;
+
+        }
+
+
+        let targetId = "";
+
+
+        if (target === "experiment2") {
+
+            targetId =
+                "labSequence";
+
+        }
+
+
+        else if (target === "experiment3") {
+
+            targetId =
+                "translationSequence";
+
+        }
+
+
+        else if (target === "variantReference") {
+
+            targetId =
+                "referenceSequence";
+
+        }
+
+
+        else if (target === "variantSample") {
+
+            targetId =
+                "sampleSequence";
+
+        }
+
+
+        else if (target === "experiment5") {
+
+            targetId =
+                "restrictionSequence";
+
+        }
+
+
+        else if (target === "experiment6") {
+
+            /*
+             * FIX:
+             * The actual Experiment 6 textarea is
+             * mutationSequence.
+             */
+
+            targetId =
+                "mutationSequence";
+
+        }
+
+
+        else if (target === "experiment7") {
+
+            targetId =
+                "complementSequence";
+
+        }
+
+
+        if (targetId) {
+
+            setSequence(
+                targetId,
+                sequence
+            );
+
+
+            status.textContent =
+                "FASTA sequence loaded successfully.";
+
+        }
+
+    };
+
+
+    reader.onerror = function() {
+
+        status.textContent =
+            "Could not read the selected file.";
+
+    };
+
+
+    reader.readAsText(file);
+
+}
+
+
+/* =========================================================
+   INITIALIZE MUTATION FIELDS
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        updateMutationFields();
+
+    }
+);
+/* ==============================
+   AGAROSE GEL BAND POSITIONING
+   ============================== */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const sampleBands = document.querySelectorAll(
+        ".sample-band[data-fragment]"
+    );
+
+    if (!sampleBands.length) {
+        return;
+    }
+
+    const fragments = Array.from(sampleBands).map(
+        band => Number(band.dataset.fragment)
+    );
+
+    const maxFragment = Math.max(...fragments);
+    const minFragment = Math.min(...fragments);
+
+    sampleBands.forEach(function (band) {
+
+        const fragment = Number(band.dataset.fragment);
+
+        let position;
+
+        if (maxFragment === minFragment) {
+            position = 50;
+        } else {
+            const logMax = Math.log10(maxFragment);
+            const logMin = Math.log10(minFragment);
+            const logFragment = Math.log10(fragment);
+
+            position =
+                15 +
+                ((logMax - logFragment) /
+                (logMax - logMin)) * 70;
+        }
+
+        band.style.top = position + "%";
+    });
+
+});
+</script>
+
+
+</body>
+
+</html>

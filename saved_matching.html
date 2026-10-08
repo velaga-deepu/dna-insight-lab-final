@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Saved Analysis - DNA Insight Lab
+    </title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        header {
+            background: #173b57;
+            color: white;
+            padding: 22px 40px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 35px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 22px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            color: #173b57;
+        }
+
+        h3 {
+            color: #173b57;
+        }
+
+        .info {
+            margin: 7px 0;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .stat {
+            background: #eef4f8;
+            padding: 18px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 24px;
+            color: #173b57;
+            margin-bottom: 5px;
+        }
+
+        .sequence {
+            background: #f1f3f5;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            word-break: break-all;
+        }
+
+        .alignment {
+            background: #17202a;
+            color: white;
+            padding: 18px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: monospace;
+            line-height: 1.8;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background: #173b57;
+            color: white;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 9px 15px;
+            border-radius: 20px;
+            background: #e7f3ea;
+            color: #236438;
+            font-weight: bold;
+        }
+
+        .buttons {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .button {
+            display: inline-block;
+            margin: 5px;
+            padding: 10px 18px;
+            background: #173b57;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .button:hover {
+            background: #245a80;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<header>
+
+    <h1>
+        🧬 DNA Insight Lab
+    </h1>
+
+</header>
+
+
+<div class="container">
+
+
+    <div class="card">
+
+        <h2>
+            {{ analysis.title }}
+        </h2>
+
+        <p class="info">
+            <strong>Module:</strong>
+            {{ analysis.module }}
+        </p>
+
+        <p class="info">
+            <strong>Saved on:</strong>
+            {{ analysis.created_at }}
+        </p>
+
+    </div>
+
+
+    {% set result = analysis.details %}
+
+
+    {% if result.error %}
+
+        <div class="card">
+
+            <h3>
+                Unable to display this analysis
+            </h3>
+
+            <p>
+                {{ result.error_message }}
+            </p>
+
+        </div>
+
+    {% else %}
+
+
+        <!-- SIMILARITY -->
+
+        <div class="card">
+
+            <h2>
+                Alignment Result
+            </h2>
+
+            <p>
+                <span class="status">
+                    {{ result.status }}
+                </span>
+            </p>
+
+            <h3>
+                Similarity:
+                {{ "%.2f"|format(result.similarity) }}%
+            </h3>
+
+        </div>
+
+
+        <!-- STATISTICS -->
+
+        <div class="card">
+
+            <h2>
+                Alignment Statistics
+            </h2>
+
+            <div class="stats">
+
+                <div class="stat">
+
+                    <strong>
+                        {{ result.length1 }}
+                    </strong>
+
+                    Sequence 1 Length
+
+                </div>
+
+
+                <div class="stat">
+
+                    <strong>
+                        {{ result.length2 }}
+                    </strong>
+
+                    Sequence 2 Length
+
+                </div>
+
+
+                <div class="stat">
+
+                    <strong>
+                        {{ result.matches }}
+                    </strong>
+
+                    Matches
+
+                </div>
+
+
+                <div class="stat">
+
+                    <strong>
+                        {{ result.mismatches }}
+                    </strong>
+
+                    Mismatches
+
+                </div>
+
+
+                <div class="stat">
+
+                    <strong>
+                        {{ result.gaps }}
+                    </strong>
+
+                    Gaps
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ORIGINAL SEQUENCES -->
+
+        <div class="card">
+
+            <h2>
+                Original Sequences
+            </h2>
+
+            <h3>
+                Sequence 1
+            </h3>
+
+            <div class="sequence">
+                {{ result.sequence1 }}
+            </div>
+
+
+            <h3>
+                Sequence 2
+            </h3>
+
+            <div class="sequence">
+                {{ result.sequence2 }}
+            </div>
+
+        </div>
+
+
+        <!-- GLOBAL ALIGNMENT -->
+
+        <div class="card">
+
+            <h2>
+                Needleman-Wunsch Global Alignment
+            </h2>
+
+            <div class="alignment">
+
+                Sequence 1:
+                {{ result.aligned_sequence1 }}
+
+                <br>
+
+                Alignment:
+                {{ result.alignment_line }}
+
+                <br>
+
+                Sequence 2:
+                {{ result.aligned_sequence2 }}
+
+            </div>
+
+        </div>
+
+
+        <!-- ALIGNMENT DETAILS -->
+
+        <div class="card">
+
+            <h2>
+                Alignment Details
+            </h2>
+
+            <p>
+                <strong>Alignment Score:</strong>
+                {{ result.alignment_score }}
+            </p>
+
+            <p>
+                <strong>Alignment Length:</strong>
+                {{ result.alignment_length }}
+            </p>
+
+            <p>
+                <strong>Matches:</strong>
+                {{ result.matches }}
+            </p>
+
+            <p>
+                <strong>Mismatches:</strong>
+                {{ result.mismatches }}
+            </p>
+
+            <p>
+                <strong>Gaps:</strong>
+                {{ result.gaps }}
+            </p>
+
+        </div>
+
+
+        <!-- DIFFERENCES -->
+
+        {% if result.differences %}
+
+        <div class="card">
+
+            <h2>
+                Differences
+            </h2>
+
+            <table>
+
+                <tr>
+
+                    <th>
+                        Position
+                    </th>
+
+                    <th>
+                        Sequence 1
+                    </th>
+
+                    <th>
+                        Sequence 2
+                    </th>
+
+                    <th>
+                        Type
+                    </th>
+
+                </tr>
+
+
+                {% for difference in result.differences %}
+
+                <tr>
+
+                    <td>
+                        {{ difference.position }}
+                    </td>
+
+                    <td>
+                        {{ difference.sequence1 }}
+                    </td>
+
+                    <td>
+                        {{ difference.sequence2 }}
+                    </td>
+
+                    <td>
+                        {{ difference.type }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </table>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- EDUCATIONAL NOTE -->
+
+        <div class="card">
+
+            <h3>
+                🧠 Educational Note
+            </h3>
+
+            <p>
+
+                This analysis uses the
+                <strong>Needleman-Wunsch global alignment
+                algorithm</strong>.
+
+                Unlike simple position-by-position comparison,
+                it can introduce gaps to account for
+                insertions and deletions.
+
+            </p>
+
+            <p>
+
+                The similarity shown here is an
+                educational sequence-alignment measure and
+                should not be interpreted as a clinical or
+                forensic identification result.
+
+            </p>
+
+        </div>
+
+
+    {% endif %}
+
+
+    <div class="buttons">
+
+        <a
+            href="/matching"
+            class="button"
+        >
+            🧬 New DNA Matching
+        </a>
+
+
+        <a
+            href="/report/saved"
+            class="button"
+        >
+            📁 Saved Reports
+        </a>
+
+
+        <a
+            href="/dashboard"
+            class="button"
+        >
+            🏠 Dashboard
+        </a>
+
+    </div>
+
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>DNA Matching - DNA Insight Lab</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        header {
+            background: #173b57;
+            color: white;
+            padding: 25px 40px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        header p {
+            margin-bottom: 0;
+            opacity: 0.9;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 35px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: #173b57;
+        }
+
+        .note {
+            background: #eef5fa;
+            border-left: 5px solid #173b57;
+            padding: 15px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .input-section {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            color: #173b57;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 175px;
+            padding: 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 16px;
+            resize: vertical;
+            font-family: monospace;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #173b57;
+        }
+
+        .example-toggle {
+            display: inline-block;
+            margin-top: 12px;
+            color: #075985;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .example-toggle:hover {
+            text-decoration: underline;
+        }
+
+        .examples {
+            display: none;
+            background: #eef5fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+
+        .example-button {
+            width: 100%;
+            display: block;
+            text-align: left;
+            background: white;
+            border: 1px solid #d4e0e8;
+            border-radius: 7px;
+            padding: 13px 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            color: #173b57;
+            font-family: Arial, sans-serif;
+        }
+
+        .example-button:last-child {
+            margin-bottom: 0;
+        }
+
+        .example-button:hover {
+            background: #e2edf4;
+            border-color: #173b57;
+        }
+
+        .example-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .example-sequence {
+            font-family: monospace;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .example-hint {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        .analyze-button {
+            display: block;
+            margin: 30px auto 0;
+            padding: 14px 30px;
+            background: #173b57;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .analyze-button:hover {
+            background: #245a80;
+        }
+
+        .error {
+            background: #fff0f0;
+            border-left: 5px solid #c0392b;
+            padding: 18px;
+            border-radius: 7px;
+            color: #8b1e16;
+            margin-bottom: 25px;
+        }
+
+        .result-summary {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat {
+            background: #eef5fa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 28px;
+            font-weight: bold;
+            color: #173b57;
+            margin-bottom: 5px;
+        }
+
+        .status {
+            background: #eaf5ed;
+            padding: 18px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .status strong {
+            color: #236438;
+            font-size: 20px;
+        }
+
+        .sequence-box {
+            background: #f7f9fb;
+            padding: 15px;
+            border-radius: 7px;
+            font-family: monospace;
+            word-break: break-all;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .alignment-box {
+            background: #172b3a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        .alignment-row {
+            font-family: monospace;
+            font-size: 16px;
+            white-space: pre;
+            line-height: 1.8;
+        }
+
+        .alignment-label {
+            display: inline-block;
+            width: 110px;
+            color: #b8c9d6;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        .difference-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .difference-table th,
+        .difference-table td {
+            padding: 12px;
+            border: 1px solid #dbe2e8;
+            text-align: left;
+        }
+
+        .difference-table th {
+            background: #173b57;
+            color: white;
+        }
+
+        .difference-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .save-button {
+            display: block;
+            margin: 25px auto 0;
+            padding: 12px 24px;
+            background: #2d7d46;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background: #236438;
+        }
+
+        .back-links {
+            text-align: center;
+            margin: 35px 0;
+        }
+
+        .back-links a {
+            display: inline-block;
+            margin: 5px 7px;
+            padding: 9px 15px;
+            background: #173b57;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .back-links a:hover {
+            background: #245a80;
+        }
+
+        @media (max-width: 750px) {
+
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                padding: 20px;
+            }
+
+            .container {
+                width: 94%;
+            }
+
+            .difference-table {
+                font-size: 13px;
+            }
+
+            .difference-table th,
+            .difference-table td {
+                padding: 8px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>🧬 DNA Insight Lab</h1>
+
+    <p>
+        DNA Sequence Matching using Needleman-Wunsch Alignment
+    </p>
+
+</header>
+
+
+<div class="container">
+
+
+    <!-- INPUT CARD -->
+
+    <div class="card">
+
+        <h2>
+            🔬 DNA Sequence Matching
+        </h2>
+
+
+        <div class="note">
+
+            <strong>NOTE:</strong>
+
+            Enter two DNA sequences to compare their similarity.
+            This module uses Needleman-Wunsch global sequence
+            alignment, which can handle insertions and deletions
+            using gaps.
+
+        </div>
+
+
+        <form method="POST"
+              action="/matching">
+
+
+            <div class="input-grid">
+
+
+                <!-- DNA SEQUENCE 1 -->
+
+                <div class="input-section">
+
+                    <label for="sequence1">
+                        DNA Sequence 1
+                    </label>
+
+                    <textarea
+                        id="sequence1"
+                        name="sequence1"
+                        placeholder="Enter DNA sequence..."
+                    ></textarea>
+
+
+                    <span
+                        class="example-toggle"
+                        onclick="toggleExamples('examples1')"
+                    >
+                        Need an example?
+                    </span>
+
+
+                    <div
+                        id="examples1"
+                        class="examples"
+                    >
+
+                        <button
+                            type="button"
+                            class="example-button"
+                            onclick="fillSequence1('ATGCCGTA')"
+                        >
+
+                            <div class="example-title">
+                                Example 1
+                            </div>
+
+                            <div class="example-sequence">
+                                ATGCCGTA
+                            </div>
+
+                            <div class="example-hint">
+                                Click to use this example
+                            </div>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="example-button"
+                            onclick="fillSequence1('ATGAAT')"
+                        >
+
+                            <div class="example-title">
+                                Example 2
+                            </div>
+
+                            <div class="example-sequence">
+                                ATGAAT
+                            </div>
+
+                            <div class="example-hint">
+                                Click to use this example
+                            </div>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="example-button"
+                            onclick="fillSequence1('AATGCC')"
+                        >
+
+                            <div class="example-title">
+                                Example 3
+                            </div>
+
+                            <div class="example-sequence">
+                                AATGCC
+                            </div>
+
+                            <div class="example-hint">
+                                Click to use this example
+                            </div>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DNA SEQUENCE 2 -->
+
+                <div class="input-section">
+
+                    <label for="sequence2">
+                        DNA Sequence 2
+                    </label>
+
+                    <textarea
+                        id="sequence2"
+                        name="sequence2"
+                        placeholder="Enter DNA sequence..."
+                    ></textarea>
+
+
+                    <span
+                        class="example-toggle"
+                        onclick="toggleExamples('examples2')"
+                    >
+                        Need an example?
+                    </span>
+
+
+                    <div
+                        id="examples2"
+                        class="examples"
+                    >
+
+                        <button
+                            type="button"
+                            class="example-button"
+                            onclick="fillSequence2('ATGCCTGA')"
+                        >
+
+                            <div class="example-title">
+                                Example 1
+                            </div>
+
+                            <div class="example-sequence">
+                                ATGCCTGA
+                            </div>
+
+                            <div class="example-hint">
+                                Click to use this example
+                            </div>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="example-button"
+                            onclick="fillSequence2('ATGAAG')"
+                        >
+
+                            <div class="example-title">
+                                Example 2
+                            </div>
+
+                            <div class="example-sequence">
+                                ATGAAG
+                            </div>
+
+                            <div class="example-hint">
+                                Click to use this example
+                            </div>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="example-button"
+                            onclick="fillSequence2('AATGGC')"
+                        >
+
+                            <div class="example-title">
+                                Example 3
+                            </div>
+
+                            <div class="example-sequence">
+                                AATGGC
+                            </div>
+
+                            <div class="example-hint">
+                                Click to use this example
+                            </div>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="analyze-button"
+            >
+                🔬 Analyze DNA Matching
+            </button>
+
+
+        </form>
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    {% if matching_result and matching_result.error %}
+
+    <div class="error">
+
+        <strong>
+            Invalid input!
+        </strong>
+
+        {{ matching_result.error_message }}
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- RESULTS -->
+
+    {% if matching_result and not matching_result.error %}
+
+    <div class="card">
+
+        <h2>
+            🧬 DNA Matching Results
+        </h2>
+
+
+        <div class="status">
+
+            <strong>
+                {{ matching_result.status }}
+            </strong>
+
+            <br>
+
+            Similarity:
+            <strong>
+                {{ "%.2f"|format(matching_result.similarity) }}%
+            </strong>
+
+        </div>
+
+
+        <div class="result-summary">
+
+            <div class="stat">
+
+                <span class="stat-number">
+                    {{ matching_result.length1 }}
+                </span>
+
+                Sequence 1 Length
+
+            </div>
+
+
+            <div class="stat">
+
+                <span class="stat-number">
+                    {{ matching_result.length2 }}
+                </span>
+
+                Sequence 2 Length
+
+            </div>
+
+
+            <div class="stat">
+
+                <span class="stat-number">
+                    {{ matching_result.matches }}
+                </span>
+
+                Matches
+
+            </div>
+
+
+            <div class="stat">
+
+                <span class="stat-number">
+                    {{ matching_result.mismatches }}
+                </span>
+
+                Mismatches
+
+            </div>
+
+
+            <div class="stat">
+
+                <span class="stat-number">
+                    {{ matching_result.gaps }}
+                </span>
+
+                Gaps
+
+            </div>
+
+        </div>
+
+
+        <h3>
+            DNA Sequence 1
+        </h3>
+
+        <div class="sequence-box">
+            {{ matching_result.sequence1 }}
+        </div>
+
+
+        <h3>
+            DNA Sequence 2
+        </h3>
+
+        <div class="sequence-box">
+            {{ matching_result.sequence2 }}
+        </div>
+
+
+        <h3>
+            🔗 Global Alignment
+        </h3>
+
+
+        <div class="alignment-box">
+
+            <div class="alignment-row">
+
+                <span class="alignment-label">
+                    Sequence 1:
+                </span>{{ matching_result.aligned_sequence1 }}
+
+            </div>
+
+
+            <div class="alignment-row">
+
+                <span class="alignment-label">
+                    Match:
+                </span>{{ matching_result.alignment_line }}
+
+            </div>
+
+
+            <div class="alignment-row">
+
+                <span class="alignment-label">
+                    Sequence 2:
+                </span>{{ matching_result.aligned_sequence2 }}
+
+            </div>
+
+        </div>
+
+
+        <p>
+
+            <strong>
+                Alignment Score:
+            </strong>
+
+            {{ matching_result.alignment_score }}
+
+        </p>
+
+
+        <p>
+
+            <strong>
+                Alignment Length:
+            </strong>
+
+            {{ matching_result.alignment_length }}
+
+        </p>
+
+
+        {% if matching_result.differences %}
+
+        <h3>
+            🔎 Detected Differences
+        </h3>
+
+
+        <table class="difference-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Position
+                    </th>
+
+                    <th>
+                        Sequence 1
+                    </th>
+
+                    <th>
+                        Sequence 2
+                    </th>
+
+                    <th>
+                        Type
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for difference
+                   in matching_result.differences %}
+
+                <tr>
+
+                    <td>
+                        {{ difference.position }}
+                    </td>
+
+                    <td>
+                        {{ difference.sequence1 }}
+                    </td>
+
+                    <td>
+                        {{ difference.sequence2 }}
+                    </td>
+
+                    <td>
+                        {{ difference.type }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% endif %}
+
+
+        <!-- SAVE ANALYSIS -->
+
+        <form
+            method="POST"
+            action="/report/save"
+        >
+
+            <input
+                type="hidden"
+                name="module"
+                value="DNA Matching"
+            >
+
+            <input
+                type="hidden"
+                name="title"
+                value="DNA Matching - Needleman-Wunsch Alignment"
+            >
+
+            <textarea
+                name="details"
+                hidden
+            >{{ matching_result | tojson }}</textarea>
+
+
+            <button
+                type="submit"
+                class="save-button"
+            >
+                💾 Save Analysis
+            </button>
+
+        </form>
+
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- NAVIGATION -->
+
+    <div class="back-links">
+
+        <a href="/">
+            🧬 DNA Analyzer
+        </a>
+
+        <a href="/mutation">
+            🔬 Mutation Analysis
+        </a>
+
+        <a href="/lab">
+            🧪 Virtual Lab
+        </a>
+
+        <a href="/genetics">
+            🧬 Genetics
+        </a>
+
+        <a href="/report/saved">
+            📁 Saved Reports
+        </a>
+
+        <a href="/dashboard">
+            🏠 Dashboard
+        </a>
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+
+/* Open or close an example menu */
+
+function toggleExamples(id) {
+
+    const examples = document.getElementById(id);
+
+    if (examples.style.display === "block") {
+
+        examples.style.display = "none";
+
+    } else {
+
+        examples.style.display = "block";
+
+    }
+
+}
+
+
+/* Fill ONLY DNA Sequence 1 */
+
+function fillSequence1(sequence) {
+
+    document.getElementById("sequence1").value = sequence;
+
+    document.getElementById("examples1").style.display = "none";
+
+}
+
+
+/* Fill ONLY DNA Sequence 2 */
+
+function fillSequence2(sequence) {
+
+    document.getElementById("sequence2").value = sequence;
+
+    document.getElementById("examples2").style.display = "none";
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
