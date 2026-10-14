@@ -618,7 +618,14 @@
 
                 <textarea
                     id="referenceInput"
-                    name="reference"></textarea>
+                    name="reference"
+                    maxlength="10000"
+                ></textarea>
+                <div class="sequence-limit">
+    <strong>Reference DNA Sequence</strong><br>
+    <span>Maximum length: 10,000 bp</span><br>
+    <span>Current length: <strong id="referenceInputLength">0</strong> bp</span>
+</div>
 
                 <button type="button"
                         class="example-button"
@@ -644,7 +651,14 @@
 
                 <textarea
                     id="sampleInput"
-                    name="sample"></textarea>
+                    name="sample"
+                    maxlength="10000"
+                ></textarea>
+                <div class="sequence-limit">
+    <strong>Sample DNA Sequence</strong><br>
+    <span>Maximum length: 10,000 bp</span><br>
+    <span>Current length: <strong id="sampleInputLength">0</strong> bp</span>
+</div>
 
                 <button type="button"
                         class="example-button"
@@ -1307,21 +1321,28 @@ function renderAnalysisResult(data) {
     result.classList.remove(
         "hidden"
     );
+if (data.error) {
 
-    if (data.error) {
+    result.innerHTML =
+        `<h3>🧪 Analysis Result</h3>
+         <div class="error">
+             <strong>
+                 ${escapeHtml(
+                     data.error_title ||
+                     "Invalid input!"
+                 )}
+             </strong>
 
-        result.innerHTML =
-            `<h3>🧪 Analysis Result</h3>
-             <div class="error">
+             <div style="white-space: pre-line;">
                  ${escapeHtml(
                      data.error_message ||
                      "Invalid input."
                  )}
-             </div>`;
+             </div>
+         </div>`;
 
-        return;
-    }
-
+    return;
+}
     let html =
         `<h3>🧪 Analysis Result</h3>`;
 
@@ -1543,6 +1564,33 @@ function useExample(
         inputId
     ).value = sequence;
 }
+/* DNA SEQUENCE LENGTH COUNTERS */
+
+const geneticsSequenceFields = [
+    ["referenceInput", "referenceInputLength"],
+    ["sampleInput", "sampleInputLength"]
+];
+
+geneticsSequenceFields.forEach(function (item) {
+
+    const sequenceInput = document.getElementById(item[0]);
+    const lengthDisplay = document.getElementById(item[1]);
+
+    if (sequenceInput && lengthDisplay) {
+
+        function updateGeneticsSequenceLength() {
+            lengthDisplay.textContent =
+                sequenceInput.value.length.toLocaleString();
+        }
+
+        sequenceInput.addEventListener(
+            "input",
+            updateGeneticsSequenceLength
+        );
+
+        updateGeneticsSequenceLength();
+    }
+});
 
 </script>
 

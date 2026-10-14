@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "name": "DNA Extraction",
+        "description": "A simulated experiment showing how DNA can be isolated from a biological sample.",
+        "steps": [
+            "Collect the biological sample.",
+            "Break open the cells to release their contents.",
+            "Remove unwanted cellular material.",
+            "Separate and collect the DNA.",
+            "DNA sample is ready for analysis."
+        ]
+    }
+]

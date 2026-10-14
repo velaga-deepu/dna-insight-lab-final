@@ -36,6 +36,22 @@ from dna_engine.alignment import (
 app = Flask(__name__)
 
 DATABASE = "dna_reports.db"
+MAX_DNA_LENGTH = 10000
+
+
+def sequence_length_error(sequence):
+    if len(sequence) > MAX_DNA_LENGTH:
+        return {
+            "error": True,
+            "error_title": "⚠️ Sequence too long",
+            "error_message": (
+                f"Your sequence contains {len(sequence):,} bp.\n"
+                f"The maximum supported length is {MAX_DNA_LENGTH:,} bp.\n\n"
+                "Please provide a shorter sequence."
+            )
+        }
+
+    return None
 
 
 # =========================================================
@@ -91,6 +107,15 @@ def home():
             ""
         ).strip().upper()
 
+        length_error = sequence_length_error(sequence)
+
+        if length_error:
+            return render_template(
+                "index.html",
+                error=length_error["error_message"],
+                error_title=length_error["error_title"]
+            )
+
         if not sequence:
 
             result = {
@@ -119,7 +144,7 @@ def home():
         "index.html",
         result=result
     )
-
+ 
 
 # =========================================================
 # FASTA UPLOAD
@@ -219,15 +244,24 @@ def mutation():
 
     if request.method == "POST":
 
-        reference = request.form.get(
-            "reference",
-            ""
-        ).strip().upper()
+        reference = request.form.get("reference","" ).strip().upper()
 
-        sample = request.form.get(
-            "sample",
-            ""
-        ).strip().upper()
+        sample = request.form.get("sample","").strip().upper()
+
+        reference_length_error = sequence_length_error(reference)
+        sample_length_error = sequence_length_error(sample)
+
+        if reference_length_error:
+         return render_template(
+        "mutation.html",
+        mutation_result=reference_length_error
+    )
+
+        if sample_length_error:
+         return render_template(
+        "mutation.html",
+        mutation_result=sample_length_error
+    )
 
         if not reference or not sample:
 
@@ -288,7 +322,16 @@ def matching():
             ""
         ).strip().upper()
 
-        if not sequence1 or not sequence2:
+        sequence1_length_error = sequence_length_error(sequence1)
+        sequence2_length_error = sequence_length_error(sequence2)
+
+        if sequence1_length_error:
+            matching_result = sequence1_length_error
+
+        elif sequence2_length_error:
+            matching_result = sequence2_length_error
+
+        elif not sequence1 or not sequence2:
 
             matching_result = {
                 "error": True,
@@ -382,14 +425,13 @@ def matching():
 # =========================================================
 # VIRTUAL DNA LAB
 # =========================================================
-
 @app.route("/lab")
 def lab():
 
     return render_template(
-        "lab.html"
+        "lab.html",
+        mutation_result=None
     )
-
 
 # =========================================================
 # LAB - EXPERIMENT 2
@@ -399,11 +441,15 @@ def lab():
 @app.route("/lab/analyze", methods=["POST"])
 def lab_analyze():
 
-    sequence = request.form.get(
-        "sequence",
-        ""
-    ).strip().upper()
+    sequence = request.form.get("sequence","").strip().upper()
 
+    length_error = sequence_length_error(sequence)
+
+    if length_error:
+     return render_template(
+        "lab.html",
+        result=length_error
+    )
     if not sequence:
 
         result = {
@@ -427,11 +473,11 @@ def lab_analyze():
         result["reverse_complement"] = reverse_complement(
             sequence
         )
-
     return render_template(
-        "lab.html",
-        lab_result=result
-    )
+    "lab.html",
+    lab_result=result,
+    mutation_result=None
+)
 
 
 # =========================================================
@@ -442,11 +488,14 @@ def lab_analyze():
 @app.route("/lab/translation", methods=["POST"])
 def lab_translation():
 
-    sequence = request.form.get(
-        "sequence",
-        ""
-    ).strip().upper()
+    sequence = request.form.get("sequence","").strip().upper()
+    length_error = sequence_length_error(sequence)
 
+    if length_error:
+     return render_template(
+        "lab.html",
+        translation_result=length_error
+    )
     if not sequence:
 
         result = {
@@ -515,10 +564,14 @@ def lab_translation():
 @app.route("/lab/experiment6", methods=["POST"])
 def lab_experiment6():
 
-    sequence = request.form.get(
-        "sequence",
-        ""
-    ).strip().upper()
+    sequence = request.form.get("sequence","").strip().upper()
+    length_error = sequence_length_error(sequence)
+
+    if length_error:
+     return render_template(
+        "lab.html",
+        translation_result=length_error
+    )
 
     if not sequence:
 
@@ -583,11 +636,14 @@ def lab_experiment6():
 @app.route("/lab/complement", methods=["POST"])
 def lab_complement():
 
-    sequence = request.form.get(
-        "sequence",
-        ""
-    ).strip().upper()
+    sequence = request.form.get("sequence","").strip().upper()
+    length_error = sequence_length_error(sequence)
 
+    if length_error:
+     return render_template(
+        "lab.html",
+        complement_result=length_error
+    )
     if not sequence:
 
         result = {
@@ -645,11 +701,14 @@ def lab_complement():
 @app.route("/lab/restriction", methods=["POST"])
 def lab_restriction():
 
-    sequence = request.form.get(
-        "sequence",
-        ""
-    ).strip().upper()
+    sequence = request.form.get("sequence","").strip().upper()
+    length_error = sequence_length_error(sequence)
 
+    if length_error:
+     return render_template(
+        "lab.html",
+        restriction_result=length_error
+    )
     enzyme = request.form.get(
         "enzyme",
         ""
@@ -692,15 +751,23 @@ def lab_restriction():
 @app.route("/lab/variant", methods=["POST"])
 def lab_variant():
 
-    reference = request.form.get(
-        "reference",
-        ""
-    ).strip().upper()
+    reference = request.form.get("reference","").strip().upper()
+    sample = request.form.get("sample","").strip().upper()
+    reference_length_error = sequence_length_error(reference)
 
-    sample = request.form.get(
-        "sample",
-        ""
-    ).strip().upper()
+    if reference_length_error:
+        return render_template(
+            "lab.html",
+            variant_result=reference_length_error
+        )
+
+    sample_length_error = sequence_length_error(sample)
+
+    if sample_length_error:
+        return render_template(
+            "lab.html",
+            variant_result=sample_length_error
+        )
 
     if not reference or not sample:
 
@@ -745,6 +812,17 @@ def lab_mutation():
     position_text = request.form.get("mutationPosition", "").strip()
     new_base = request.form.get("mutationBase", "").strip().upper()
 
+    length_error = sequence_length_error(sequence)
+
+    if length_error:
+        return render_template(
+            "lab.html",
+            mutation_result={
+                "error": True,
+                "title": length_error["error_title"],
+                "message": length_error["error_message"]
+            }
+        )
     # Validate DNA sequence
     if not sequence:
         return render_template(
@@ -987,6 +1065,9 @@ def genetics_analyze():
     reference = request.form.get("reference", "").strip().upper()
     sample = request.form.get("sample", "").strip().upper()
 
+    reference_length_error = sequence_length_error(reference)
+    sample_length_error = sequence_length_error(sample)
+
     conditions = get_conditions()
     condition = next(
         (item for item in conditions if item["id"] == condition_id),
@@ -998,6 +1079,12 @@ def genetics_analyze():
             "error": True,
             "error_message": "Invalid input! Please select a genetic condition."
         }
+
+    elif reference_length_error:
+        analysis_result = reference_length_error
+
+    elif sample_length_error:
+        analysis_result = sample_length_error
 
     elif condition_id in {"hypertension", "type2_diabetes"}:
         analysis_result = {
@@ -1370,7 +1457,9 @@ def generate_combined_report():
 # =========================================================
 # RUN APPLICATION
 # =========================================================
-
+@app.route("/helix")
+def helix():
+    return render_template("helix.html")
 if __name__ == "__main__":
 
     app.run(

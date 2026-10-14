@@ -1,0 +1,98 @@
+[
+    {
+        "id": "sickle_cell",
+        "name": "Sickle Cell Disease",
+        "gene": "HBB",
+        "type": "Inherited genetic condition",
+        "description": "Sickle cell disease is an inherited blood disorder that affects hemoglobin and red blood cells.",
+        "genetics": "Changes in the HBB gene can produce an altered form of hemoglobin.",
+        "analysis": "This case demonstrates how a small DNA change can change a codon and the amino acid produced from it.",
+        "reference_sequence": "ATGGCC",
+        "sample_sequence": "ATGACC",
+        "note": "This is an educational example and is not a medical diagnostic test."
+    },
+    {
+        "id": "cystic_fibrosis",
+        "name": "Cystic Fibrosis",
+        "gene": "CFTR",
+        "type": "Inherited genetic condition",
+        "description": "Cystic fibrosis is an inherited condition that can affect the lungs and digestive system.",
+        "genetics": "Changes in the CFTR gene can affect the function of the CFTR protein.",
+        "analysis": "This case demonstrates how comparing DNA sequences can help identify a genetic difference.",
+        "reference_sequence": "ATGGCC",
+        "sample_sequence": "ATGACC",
+        "note": "Many different CFTR variants exist. This simplified case is only for educational demonstration."
+    },
+    {
+        "id": "beta_thalassemia",
+        "name": "Beta-Thalassemia",
+        "gene": "HBB",
+        "type": "Inherited blood condition",
+        "description": "Beta-thalassemia affects the production of beta-globin, an important part of hemoglobin.",
+        "genetics": "Variants in the HBB gene can affect the production or function of beta-globin.",
+        "analysis": "The case demonstrates how a DNA sequence difference can be investigated using sequence comparison.",
+        "reference_sequence": "ATGGCC",
+        "sample_sequence": "ATGACC",
+        "note": "This is a simplified educational case and does not represent clinical testing."
+    },
+    {
+        "id": "pku",
+        "name": "Phenylketonuria (PKU)",
+        "gene": "PAH",
+        "type": "Inherited metabolic condition",
+        "description": "PKU is an inherited condition in which the body has difficulty processing the amino acid phenylalanine.",
+        "genetics": "Changes in the PAH gene can reduce the activity of the enzyme involved in processing phenylalanine.",
+        "analysis": "This case demonstrates how genetic changes can be connected to changes in biological processes.",
+        "reference_sequence": "ATGGCC",
+        "sample_sequence": "ATGACC",
+        "note": "This is an educational demonstration and is not a diagnostic test."
+    },
+    {
+        "id": "huntington",
+        "name": "Huntington Disease",
+        "gene": "HTT",
+        "type": "Inherited neurological condition",
+        "description": "Huntington disease is an inherited condition that affects the nervous system.",
+        "genetics": "It is associated with an expanded CAG repeat in the HTT gene.",
+        "analysis": "This case introduces the idea that genetic conditions can involve changes in repeated DNA sequences.",
+        "reference_sequence": "CAGCAGCAG",
+        "sample_sequence": "CAGCAGCAGCAG",
+        "note": "This is a simplified educational representation and is not a clinical repeat-length test."
+    },
+    {
+        "id": "duchenne",
+        "name": "Duchenne Muscular Dystrophy",
+        "gene": "DMD",
+        "type": "Inherited muscle condition",
+        "description": "Duchenne muscular dystrophy is an inherited condition that causes progressive muscle weakness.",
+        "genetics": "Changes in the DMD gene can affect dystrophin, a protein important for muscle cells.",
+        "analysis": "This case demonstrates the relationship between genes and protein function.",
+        "reference_sequence": "ATGGCC",
+        "sample_sequence": "ATGACC",
+        "note": "This is a simplified educational example and is not clinical testing."
+    },
+    {
+        "id": "hypertension",
+        "name": "High Blood Pressure",
+        "gene": "Multiple genes",
+        "type": "Multifactorial condition",
+        "description": "High blood pressure can be influenced by genetics, lifestyle, age, and environmental factors.",
+        "genetics": "There is no single DNA change that can be used by this application to diagnose high blood pressure.",
+        "analysis": "This case demonstrates that genetics can contribute to a condition while other factors also play important roles.",
+        "reference_sequence": "ATGGCC",
+        "sample_sequence": "ATGGCC",
+        "note": "This section is educational. DNA analysis cannot diagnose high blood pressure."
+    },
+    {
+        "id": "type2_diabetes",
+        "name": "Type 2 Diabetes",
+        "gene": "Multiple genes",
+        "type": "Multifactorial condition",
+        "description": "Type 2 diabetes is influenced by genetic, lifestyle, and environmental factors.",
+        "genetics": "Many genes can contribute to susceptibility, but there is no single DNA sequence that this application can use to diagnose type 2 diabetes.",
+        "analysis": "This case demonstrates the idea that genetics can influence disease risk together with lifestyle and environmental factors.",
+        "reference_sequence": "ATGGCC",
+        "sample_sequence": "ATGGCC",
+        "note": "This section is educational. DNA analysis cannot diagnose type 2 diabetes."
+    }
+]

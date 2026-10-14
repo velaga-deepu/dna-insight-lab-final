@@ -1,0 +1,454 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combined DNA Analysis Report</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f1f5f9;
+            color: #243447;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #173b57, #236b75);
+            color: white;
+            padding: 35px 6%;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        .header p {
+            color: #e2f1f5;
+            margin-bottom: 0;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 25px auto;
+            padding: 0 20px;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 11px 17px;
+            background: #236b75;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .button:hover {
+            background: #173b57;
+        }
+
+        .report-card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid #dce5ec;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(15, 23, 42, 0.05);
+            page-break-inside: avoid;
+        }
+
+        h2 {
+            color: #173b57;
+            margin-top: 0;
+        }
+
+        h3 {
+            color: #236b75;
+            margin-top: 25px;
+        }
+
+        .meta {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .summary-item {
+            background: #f0f7f8;
+            border: 1px solid #d5e8e9;
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
+            overflow-wrap: anywhere;
+        }
+
+        .summary-item .label {
+            display: block;
+            font-size: 13px;
+            color: #526779;
+        }
+
+        .summary-item .value {
+            display: block;
+            font-size: 22px;
+            font-weight: bold;
+            color: #173b57;
+        }
+
+        .sequence-box {
+            background: #f0f7f8;
+            border-left: 4px solid #236b75;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: Consolas, monospace;
+            overflow-wrap: anywhere;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 11px;
+            border: 1px solid #dce5ec;
+            text-align: left;
+            overflow-wrap: anywhere;
+        }
+
+        .data-table th {
+            background: #edf4f7;
+            color: #173b57;
+        }
+
+        .data-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .note {
+            background: #fff8e7;
+            border-left: 4px solid #e7ad39;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 25px;
+        }
+
+        .empty {
+            color: #64748b;
+            font-style: italic;
+        }
+
+        .footer {
+            text-align: center;
+            color: #64748b;
+            font-size: 13px;
+            padding: 25px;
+        }
+
+        @media print {
+            body {
+                background: white;
+                font-size: 12px;
+            }
+
+            .header {
+                background: #173b57 !important;
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .container {
+                max-width: none;
+                margin: 10px;
+                padding: 0;
+            }
+
+            .actions {
+                display: none;
+            }
+
+            .report-card {
+                box-shadow: none;
+                border: 1px solid #ccc;
+                break-inside: auto;
+            }
+
+            .summary-item,
+            .data-table th {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .footer {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="header">
+    <h1>🧬 DNA Insight Lab</h1>
+    <h2 style="color:white; margin:10px 0;">Combined Analysis Report</h2>
+    <p>Generated on: {{ generated_at }}</p>
+    <p>Total analyses included: {{ analyses|length }}</p>
+</header>
+
+<main class="container">
+
+    <div class="actions">
+        <button class="button" onclick="window.print()">
+            🖨️ Print / Save as PDF
+        </button>
+
+        <a class="button" href="{{ url_for('saved_reports') }}">
+            ← Back to Saved Analyses
+        </a>
+
+        <a class="button" href="{{ url_for('home') }}">
+            DNA Analyzer
+        </a>
+    </div>
+
+    {% for analysis in analyses %}
+
+    <section class="report-card">
+
+        <h2>{{ loop.index }}. {{ analysis.title }}</h2>
+
+        <p class="meta">
+            <strong>Module:</strong> {{ analysis.module }}<br>
+            <strong>Originally saved:</strong> {{ analysis.created_at }}
+        </p>
+
+        {% set d = analysis.details %}
+
+        {# DNA SEQUENCE ANALYSIS #}
+        {% if d.sequence is defined and d.length is defined %}
+
+            <h3>🧬 Input DNA Sequence</h3>
+            <div class="sequence-box">{{ d.sequence }}</div>
+
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <span class="label">Sequence Length</span>
+                    <span class="value">{{ d.length }}</span>
+                </div>
+
+                <div class="summary-item">
+                    <span class="label">GC Content</span>
+                    <span class="value">{{ "%.2f"|format(d.GC|float) }}%</span>
+                </div>
+
+                <div class="summary-item">
+                    <span class="label">AT Content</span>
+                    <span class="value">{{ "%.2f"|format(d.AT|float) }}%</span>
+                </div>
+            </div>
+
+            <h3>📊 Nucleotide Count</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Nucleotide</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>A (Adenine)</td><td>{{ d.A }}</td></tr>
+                    <tr><td>T (Thymine)</td><td>{{ d.T }}</td></tr>
+                    <tr><td>G (Guanine)</td><td>{{ d.G }}</td></tr>
+                    <tr><td>C (Cytosine)</td><td>{{ d.C }}</td></tr>
+                </tbody>
+            </table>
+
+            {% if d.reverse_complement is defined %}
+                <h3>🔄 Reverse Complement</h3>
+                <div class="sequence-box">{{ d.reverse_complement }}</div>
+            {% endif %}
+
+            {% if d.rna is defined %}
+                <h3>🧬 DNA → RNA</h3>
+                <div class="sequence-box">{{ d.rna }}</div>
+            {% endif %}
+
+            {% if d.protein is defined %}
+                <h3>🧪 Protein Sequence</h3>
+                <div class="sequence-box">
+                    {{ d.protein if d.protein else "No protein sequence produced." }}
+                </div>
+            {% endif %}
+
+            {% if d.codons is defined %}
+                <h3>Codon Analysis</h3>
+
+                {% if d.codons %}
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Codon</th>
+                                <th>Amino Acid</th>
+                                <th>Symbol</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for codon in d.codons %}
+                            <tr>
+                                <td>{{ codon.codon }}</td>
+                                <td>{{ codon.amino_acid_name }}</td>
+                                <td>{{ codon.amino_acid }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="empty">No codon results available.</p>
+                {% endif %}
+            {% endif %}
+
+            {% if d.orfs is defined %}
+                <h3>ORF Detection</h3>
+
+                {% if d.orfs %}
+                    {% for orf in d.orfs %}
+                        <p><strong>ORF {{ loop.index }}</strong></p>
+                        <table class="data-table">
+                            <tbody>
+                                <tr><th>Start Position</th><td>{{ orf.start }}</td></tr>
+                                <tr><th>End Position</th><td>{{ orf.end }}</td></tr>
+                                <tr><th>Length</th><td>{{ orf.length }} bases</td></tr>
+                                <tr><th>Sequence</th><td>{{ orf.sequence }}</td></tr>
+                            </tbody>
+                        </table>
+                    {% endfor %}
+                {% else %}
+                    <p>No complete ORF detected.</p>
+                {% endif %}
+            {% endif %}
+
+        {# MUTATION ANALYSIS #}
+        {% elif d.reference is defined and d.sample is defined and d.differences is defined %}
+
+            <h3>Reference DNA Sequence</h3>
+            <div class="sequence-box">{{ d.reference }}</div>
+
+            <h3>Sample DNA Sequence</h3>
+            <div class="sequence-box">{{ d.sample }}</div>
+
+            {% if d.total_mutations is defined %}
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <span class="label">Total Differences</span>
+                        <span class="value">{{ d.total_mutations }}</span>
+                    </div>
+                </div>
+            {% endif %}
+
+            <h3>Detected Differences</h3>
+
+            {% if d.differences %}
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Position</th>
+                            <th>Reference Base</th>
+                            <th>Sample Base</th>
+                            <th>Type</th>
+                            <th>Change</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for mutation in d.differences %}
+                        <tr>
+                            <td>{{ mutation.position }}</td>
+                            <td>{{ mutation.reference }}</td>
+                            <td>{{ mutation.sample }}</td>
+                            <td>{{ mutation.type }}</td>
+                            <td>{{ mutation.change }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No differences detected between these sequences.</p>
+            {% endif %}
+
+        {# OTHER ANALYSIS MODULES #}
+        {% else %}
+
+            <h3>Analysis Results</h3>
+
+            {% if d %}
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Result Field</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for key, value in d.items() %}
+                        <tr>
+                            <td>{{ key|replace('_', ' ')|title }}</td>
+                            <td>
+                                {% if value is mapping or value is sequence and value is not string %}
+                                    <pre style="white-space:pre-wrap; overflow-wrap:anywhere; margin:0;">{{ value|tojson(indent=2) }}</pre>
+                                {% else %}
+                                    {{ value }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="empty">No result details were saved.</p>
+            {% endif %}
+
+        {% endif %}
+
+    </section>
+
+    {% endfor %}
+
+    <div class="note">
+        <strong>Educational Notice:</strong>
+        This report contains saved computational analysis results.
+        It is intended for educational purposes and is not a medical diagnosis.
+    </div>
+
+</main>
+
+<footer class="footer">
+    DNA Insight Lab · Educational Bioinformatics Project
+</footer>
+
+</body>
+</html>

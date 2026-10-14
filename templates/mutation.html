@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Mutation Analysis - DNA Insight Lab
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        header {
+            background: #173b57;
+            color: white;
+            padding: 25px 40px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        header p {
+            margin-bottom: 0;
+            opacity: 0.9;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 35px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 28px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            color: #173b57;
+            margin-top: 0;
+        }
+
+        .note {
+            background: #eef5fa;
+            border-left: 5px solid #173b57;
+            padding: 15px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .input-section {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            color: #173b57;
+            margin-bottom: 8px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 110px;
+            padding: 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font-size: 16px;
+            resize: vertical;
+            font-family: monospace;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #173b57;
+        }
+
+        .example-toggle {
+            display: inline-block;
+            margin-top: 8px;
+            color: #245a80;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .example-toggle:hover {
+            text-decoration: underline;
+        }
+
+        .examples {
+            display: none;
+            background: #f1f6fa;
+            padding: 15px;
+            border-radius: 7px;
+            margin-top: 10px;
+        }
+
+        .example-item {
+            background: white;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border: 1px solid #dbe5ec;
+        }
+
+        .example-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .example-item button {
+            margin-top: 8px;
+            padding: 7px 12px;
+            border: none;
+            border-radius: 5px;
+            background: #173b57;
+            color: white;
+            cursor: pointer;
+        }
+
+        .example-item button:hover {
+            background: #245a80;
+        }
+
+        .analyze-button {
+            display: block;
+            margin: 25px auto 5px;
+            padding: 13px 30px;
+            background: #173b57;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .analyze-button:hover {
+            background: #245a80;
+        }
+
+        .error {
+            background: #fff0f0;
+            border-left: 5px solid #c0392b;
+            padding: 18px;
+            border-radius: 7px;
+            color: #8b1e16;
+            margin-bottom: 25px;
+        }
+
+        .result-summary {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat {
+            background: #eef5fa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 28px;
+            font-weight: bold;
+            color: #173b57;
+            margin-bottom: 5px;
+        }
+
+        .sequence-box {
+            background: #f7f9fb;
+            padding: 15px;
+            border-radius: 7px;
+            font-family: monospace;
+            word-break: break-all;
+            margin-bottom: 20px;
+        }
+
+        .changes-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .changes-table th,
+        .changes-table td {
+            padding: 12px;
+            border: 1px solid #dbe2e8;
+            text-align: left;
+        }
+
+        .changes-table th {
+            background: #173b57;
+            color: white;
+        }
+
+        .changes-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .mutation-detail {
+            background: #f7f9fb;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 18px;
+        }
+
+        .mutation-detail h4 {
+            margin-top: 0;
+            color: #173b57;
+        }
+
+        .mutation-detail p {
+            line-height: 1.6;
+        }
+
+        .warning {
+            color: #9a6700;
+            font-weight: bold;
+        }
+
+        .save-button {
+            display: block;
+            margin: 25px auto 0;
+            padding: 12px 24px;
+            background: #2d7d46;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background: #236438;
+        }
+
+        .back-links {
+            text-align: center;
+            margin: 35px 0;
+        }
+
+        .back-links a {
+            display: inline-block;
+            margin: 5px 7px;
+            padding: 9px 15px;
+            background: #173b57;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .back-links a:hover {
+            background: #245a80;
+        }
+
+        @media (max-width: 650px) {
+
+            header {
+                padding: 20px;
+            }
+
+            .container {
+                width: 94%;
+            }
+
+            .changes-table {
+                font-size: 13px;
+            }
+
+            .changes-table th,
+            .changes-table td {
+                padding: 8px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header>
+
+    <h1>🧬 DNA Insight Lab</h1>
+
+    <p>
+        Mutation and Variant Analysis
+    </p>
+
+</header>
+
+
+<div class="container">
+
+
+    <!-- INPUT CARD -->
+
+    <div class="card">
+
+        <h2>
+            🔬 Mutation Analysis
+        </h2>
+
+        <div class="note">
+
+            <strong>NOTE:</strong>
+
+            Enter two DNA sequences of the same length.
+            The system compares them base-by-base and identifies
+            substitutions. It also checks whether a mutation changes
+            the amino acid encoded by the affected codon.
+
+        </div>
+
+
+        <form method="POST"
+              action="/mutation">
+
+
+            <!-- REFERENCE -->
+
+            <div class="input-section">
+
+                <label for="reference">
+                    Reference DNA Sequence
+                </label>
+
+                <textarea
+                    id="reference"
+                    name="reference"
+                    placeholder=""
+                     maxlength="10000"
+                ></textarea>
+
+                <span
+                    class="example-toggle"
+                    onclick="toggleExamples('referenceExamples')"
+                >
+                    Need an example?
+                </span>
+
+
+                <div
+                    id="referenceExamples"
+                    class="examples"
+                >
+
+                    <div class="example-item">
+
+                        <strong>
+                            Example 1 — Codon-level mutation
+                        </strong>
+
+                        <p>
+                            Reference:
+                            <code>ATGAAT</code>
+                        </p>
+
+                        <p>
+                            Sample:
+                            <code>ATGAAG</code>
+                        </p>
+
+                        <button
+                            type="button"
+                            onclick="useExample(
+                                'reference',
+                                'ATGAAT'
+                            ); useExample(
+                                'sample',
+                                'ATGAAG'
+                            )"
+                        >
+                            Use this example
+                        </button>
+
+                    </div>
+
+
+                    <div class="example-item">
+
+                        <strong>
+                            Example 2 — Multiple substitutions
+                        </strong>
+
+                        <p>
+                            Reference:
+                            <code>ATGGCC</code>
+                        </p>
+
+                        <p>
+                            Sample:
+                            <code>ATGACC</code>
+                        </p>
+
+                        <button
+                            type="button"
+                            onclick="useExample(
+                                'reference',
+                                'ATGGCC'
+                            ); useExample(
+                                'sample',
+                                'ATGACC'
+                            )"
+                        >
+                            Use this example
+                        </button>
+
+                    </div>
+
+
+                    <div class="example-item">
+
+                        <strong>
+                            Example 3 — Two codon changes
+                        </strong>
+
+                        <p>
+                            Reference:
+                            <code>ATGAAT</code>
+                        </p>
+
+                        <p>
+                            Sample:
+                            <code>ATGAAA</code>
+                        </p>
+
+                        <button
+                            type="button"
+                            onclick="useExample(
+                                'reference',
+                                'ATGAAT'
+                            ); useExample(
+                                'sample',
+                                'ATGAAA'
+                            )"
+                        >
+                            Use this example
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- SAMPLE -->
+
+            <div class="input-section">
+
+                <label for="sample">
+                    Sample DNA Sequence
+                </label>
+
+                <textarea
+                    id="sample"
+                    name="sample"
+                    placeholder=""
+                    maxlength="10000"
+                ></textarea>
+
+                <span
+                    class="example-toggle"
+                    onclick="toggleExamples('sampleExamples')"
+                >
+                    Need an example?
+                </span>
+
+
+                <div
+                    id="sampleExamples"
+                    class="examples"
+                >
+
+                    <div class="example-item">
+
+                        <strong>
+                            Example 1 — Codon-level mutation
+                        </strong>
+
+                        <p>
+                            Reference:
+                            <code>ATGAAT</code>
+                        </p>
+
+                        <p>
+                            Sample:
+                            <code>ATGAAG</code>
+                        </p>
+
+                        <button
+                            type="button"
+                            onclick="useExample(
+                                'reference',
+                                'ATGAAT'
+                            ); useExample(
+                                'sample',
+                                'ATGAAG'
+                            )"
+                        >
+                            Use this example
+                        </button>
+
+                    </div>
+
+
+                    <div class="example-item">
+
+                        <strong>
+                            Example 2 — Multiple substitutions
+                        </strong>
+
+                        <p>
+                            Reference:
+                            <code>ATGGCC</code>
+                        </p>
+
+                        <p>
+                            Sample:
+                            <code>ATGACC</code>
+                        </p>
+
+                        <button
+                            type="button"
+                            onclick="useExample(
+                                'reference',
+                                'ATGGCC'
+                            ); useExample(
+                                'sample',
+                                'ATGACC'
+                            )"
+                        >
+                            Use this example
+                        </button>
+
+                    </div>
+
+
+                    <div class="example-item">
+
+                        <strong>
+                            Example 3 — Two codon changes
+                        </strong>
+
+                        <p>
+                            Reference:
+                            <code>ATGAAT</code>
+                        </p>
+
+                        <p>
+                            Sample:
+                            <code>ATGAAA</code>
+                        </p>
+
+                        <button
+                            type="button"
+                            onclick="useExample(
+                                'reference',
+                                'ATGAAT'
+                            ); useExample(
+                                'sample',
+                                'ATGAAA'
+                            )"
+                        >
+                            Use this example
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="analyze-button"
+            >
+                🔬 Analyze Mutation
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    {% if mutation_result and mutation_result.error %}
+
+    <div class="error">
+
+        <strong>
+            Invalid input!
+        </strong>
+
+        {{ mutation_result.error_message }}
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- RESULTS -->
+
+    {% if mutation_result and not mutation_result.error %}
+
+    <div class="card">
+
+        <h2>
+            🧬 Mutation Analysis Results
+        </h2>
+
+
+        <div class="result-summary">
+
+            <div class="stat">
+
+                <span class="stat-number">
+                    {{ mutation_result.total_mutations }}
+                </span>
+
+                Total Changes
+
+            </div>
+
+
+            <div class="stat">
+
+                <span class="stat-number">
+                    {{ mutation_result.reference | length }}
+                </span>
+
+                Reference Length
+
+            </div>
+
+
+            <div class="stat">
+
+                <span class="stat-number">
+                    {{ mutation_result.sample | length }}
+                </span>
+
+                Sample Length
+
+            </div>
+
+        </div>
+
+
+        <h3>
+            Reference Sequence
+        </h3>
+
+        <div class="sequence-box">
+            {{ mutation_result.reference }}
+        </div>
+
+
+        <h3>
+            Sample Sequence
+        </h3>
+
+        <div class="sequence-box">
+            {{ mutation_result.sample }}
+        </div>
+
+
+        <h3>
+            🔎 Detected Changes
+        </h3>
+
+
+        {% if mutation_result.differences %}
+
+        <table class="changes-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Position
+                    </th>
+
+                    <th>
+                        Reference
+                    </th>
+
+                    <th>
+                        Sample
+                    </th>
+
+                    <th>
+                        Type
+                    </th>
+
+                    <th>
+                        Codon Effect
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for mutation in mutation_result.differences %}
+
+                <tr>
+
+                    <td>
+                        {{ mutation.position }}
+                    </td>
+
+                    <td>
+                        {{ mutation.reference }}
+                    </td>
+
+                    <td>
+                        {{ mutation.sample }}
+                    </td>
+
+                    <td>
+                        {{ mutation.type }}
+                    </td>
+
+                    <td>
+
+                        {% if "cannot be determined" in mutation.effect|lower %}
+
+                        <span class="warning">
+                            {{ mutation.effect }}
+                        </span>
+
+                        {% else %}
+
+                        {{ mutation.effect }}
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+
+        {% for mutation in mutation_result.differences %}
+
+        <div class="mutation-detail">
+
+            <h4>
+                Position {{ mutation.position }}
+            </h4>
+
+
+            <p>
+                <strong>
+                    Reference codon:
+                </strong>
+
+                {{ mutation.reference_codon }}
+            </p>
+
+
+            <p>
+                <strong>
+                    Sample codon:
+                </strong>
+
+                {{ mutation.sample_codon }}
+            </p>
+
+
+            {% if mutation.reference_amino_acid_name !=
+                  "⚠️ Codon effect cannot be determined" %}
+
+            <p>
+                <strong>
+                    Reference amino acid:
+                </strong>
+
+                {{ mutation.reference_amino_acid_name }}
+            </p>
+
+
+            <p>
+                <strong>
+                    Sample amino acid:
+                </strong>
+
+                {{ mutation.sample_amino_acid_name }}
+            </p>
+
+            {% else %}
+
+            <p class="warning">
+                ⚠️ Codon effect cannot be determined
+            </p>
+
+            {% endif %}
+
+
+            <p>
+
+                <strong>
+                    Effect:
+                </strong>
+
+                {{ mutation.effect }}
+
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+
+        {% else %}
+
+        <p>
+            No nucleotide changes were detected.
+        </p>
+
+        {% endif %}
+
+
+        <!-- SAVE -->
+
+        <form
+            method="POST"
+            action="/report/save"
+        >
+
+            <input
+                type="hidden"
+                name="module"
+                value="Mutation Analysis"
+            >
+
+            <input
+                type="hidden"
+                name="title"
+                value="DNA Mutation Analysis"
+            >
+
+            <textarea
+                name="details"
+                hidden
+            >{{ mutation_result | tojson }}</textarea>
+
+            <button
+                type="submit"
+                class="save-button"
+            >
+                💾 Save Analysis
+            </button>
+
+        </form>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- LINKS -->
+
+    <div class="back-links">
+
+        <a href="/">
+            🧬 DNA Analyzer
+        </a>
+
+        <a href="/matching">
+            🔬 DNA Matching
+        </a>
+
+        <a href="/lab">
+            🧪 Virtual Lab
+        </a>
+
+        <a href="/genetics">
+            🧬 Genetics
+        </a>
+
+        <a href="/report/saved">
+            📁 Saved Reports
+        </a>
+
+        <a href="/dashboard">
+            🏠 Dashboard
+        </a>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function toggleExamples(id) {
+
+    const box = document.getElementById(id);
+
+    if (box.style.display === "block") {
+
+        box.style.display = "none";
+
+    } else {
+
+        box.style.display = "block";
+
+    }
+
+}
+
+
+function useExample(fieldId, sequence) {
+
+    document.getElementById(fieldId).value = sequence;
+
+}
+
+</script>
+
+</body>
+
+</html>

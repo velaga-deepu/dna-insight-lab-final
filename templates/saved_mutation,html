@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Saved Mutation Analysis - DNA Insight Lab
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        header {
+            background: #173b57;
+            color: white;
+            padding: 25px 40px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 40px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        h2,
+        h3 {
+            color: #173b57;
+        }
+
+        .info {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .sequence {
+            background: #f4f7fb;
+            padding: 15px;
+            border-radius: 7px;
+            font-family: monospace;
+            overflow-wrap: anywhere;
+            line-height: 1.7;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat {
+            background: #f4f7fb;
+            padding: 18px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 24px;
+            color: #173b57;
+            margin-bottom: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border: 1px solid #dbe3ea;
+            text-align: left;
+        }
+
+        th {
+            background: #173b57;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .links a {
+            display: inline-block;
+            margin: 5px;
+            padding: 10px 16px;
+            background: #173b57;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .links a:hover {
+            background: #245a80;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header>
+
+    <h1>
+        🧬 DNA Insight Lab
+    </h1>
+
+</header>
+
+
+<div class="container">
+
+
+    <div class="card">
+
+        <h2>
+            📁 {{ analysis.title }}
+        </h2>
+
+        <p class="info">
+
+            <strong>
+                Module:
+            </strong>
+
+            {{ analysis.module }}
+
+            <br><br>
+
+            <strong>
+                Saved on:
+            </strong>
+
+            {{ analysis.created_at }}
+
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>
+            📊 Mutation Analysis Results
+        </h2>
+
+
+        <div class="stats">
+
+            <div class="stat">
+
+                <strong>
+                    {{ analysis.details.total_mutations }}
+                </strong>
+
+                Total Changes
+
+            </div>
+
+
+            <div class="stat">
+
+                <strong>
+                    {{ analysis.details.reference|length }}
+                </strong>
+
+                Reference Length
+
+            </div>
+
+
+            <div class="stat">
+
+                <strong>
+                    {{ analysis.details.sample|length }}
+                </strong>
+
+                Sample Length
+
+            </div>
+
+        </div>
+
+
+        <h3>
+            Reference Sequence
+        </h3>
+
+        <div class="sequence">
+
+            {{ analysis.details.reference }}
+
+        </div>
+
+
+        <h3>
+            Sample Sequence
+        </h3>
+
+        <div class="sequence">
+
+            {{ analysis.details.sample }}
+
+        </div>
+
+
+        {% if analysis.details.differences %}
+
+        <h3>
+            🔎 Detected Changes
+        </h3>
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Position
+                    </th>
+
+                    <th>
+                        Reference
+                    </th>
+
+                    <th>
+                        Sample
+                    </th>
+
+                    <th>
+                        Type
+                    </th>
+
+                    <th>
+                        Effect
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for mutation in analysis.details.differences %}
+
+                <tr>
+
+                    <td>
+                        {{ mutation.position }}
+                    </td>
+
+                    <td>
+                        {{ mutation.reference }}
+                    </td>
+
+                    <td>
+                        {{ mutation.sample }}
+                    </td>
+
+                    <td>
+                        {{ mutation.type }}
+                    </td>
+
+                    <td>
+                        {{ mutation.effect }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+
+        {% else %}
+
+        <p>
+            No differences were detected between the two sequences.
+        </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <div class="links">
+
+        <a href="/mutation">
+            🔬 New Mutation Analysis
+        </a>
+
+        <a href="/report/saved">
+            📁 Saved Reports
+        </a>
+
+        <a href="/dashboard">
+            🏠 Dashboard
+        </a>
+
+    </div>
+
+
+</div>
+
+</body>
+
+</html>

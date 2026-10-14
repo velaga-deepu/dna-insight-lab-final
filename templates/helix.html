@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3D DNA helix - DNA Insight Lab</title>
+<style>
+:root{--bg:#070b12;--panel:#0e1521;--line:#223049;--text:#e6edf3;--mute:#93a4b8;--teal:#2dd4bf;--violet:#a78bfa}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 "Segoe UI",system-ui,sans-serif}
+main{display:grid;grid-template-columns:350px 1fr;min-height:100vh}
+aside{padding:26px;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;gap:12px}
+a{color:var(--teal)}
+h1{margin:4px 0 0;font-size:1.7rem;line-height:1.2}
+p{margin:0;color:var(--mute)}
+label{font-weight:600}
+textarea{width:100%;min-height:90px;padding:10px;background:#0a101a;color:var(--text);border:1px solid var(--line);border-radius:8px;font:15px Consolas,monospace;resize:vertical}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+button{padding:9px 16px;border:0;border-radius:8px;background:var(--teal);color:#04251f;font:600 14px inherit;cursor:pointer}
+button.ghost{background:#1a2638;color:var(--text)}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+#msg{min-height:1.5em;color:var(--text)}
+#msg.err{color:#f87171}
+.chk{display:flex;gap:8px;align-items:center;font-weight:400}
+ul{list-style:none;margin:0;padding:0;display:grid;gap:5px;color:var(--mute)}
+li i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:8px}
+section{position:relative;min-height:62vh;background:radial-gradient(circle at 50% 50%,#10243a 0,#070b12 68%)}
+canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}
+canvas:active{cursor:grabbing}
+@media(max-width:820px){main{grid-template-columns:1fr}section{height:72vh}}
+</style>
+</head>
+<body>
+<main>
+<aside>
+  <a href="/dashboard">Back to dashboard</a>
+  <h1>3D DNA helix</h1>
+  <p>Type a DNA sequence and see it built as a double helix. Drag the helix to turn it.</p>
+  <label for="seq">DNA sequence</label>
+  <textarea id="seq" spellcheck="false" placeholder="Only A, T, G and C">ATGGCCATTTAAGCTAGCTA</textarea>
+  <div class="row">
+    <button id="go">Show helix</button>
+    <button id="ex" class="ghost">Random example</button>
+  </div>
+  <p id="msg" role="status"></p>
+  <label class="chk"><input type="checkbox" id="spin"> Auto-rotate</label>
+  <ul>
+    <li><i style="background:#4ade80"></i>A, adenine (pairs with T)</li>
+    <li><i style="background:#f87171"></i>T, thymine (pairs with A)</li>
+    <li><i style="background:#fbbf24"></i>G, guanine (pairs with C)</li>
+    <li><i style="background:#60a5fa"></i>C, cytosine (pairs with G)</li>
+    <li><i style="background:#2dd4bf"></i>Teal backbone: your sequence</li>
+    <li><i style="background:#a78bfa"></i>Violet backbone: its complement</li>
+  </ul>
+  <p>This is an idealised B-DNA model: right-handed, 10.5 base pairs per turn. A real molecule's exact shape is measured in a lab, so treat this as a model, not a photograph.</p>
+</aside>
+<section><canvas id="c"></canvas></section>
+</main>
+<script>
+const COL={A:"#4ade80",T:"#f87171",G:"#fbbf24",C:"#60a5fa"};
+const COMP={A:"T",T:"A",G:"C",C:"G"};
+const RISE=3.4,RADIUS=10,TWIST=2*Math.PI/10.5,GROOVE=150*Math.PI/180,MAX=100;
+const cv=document.getElementById("c"),ctx=cv.getContext("2d");
+const seqEl=document.getElementById("seq"),msg=document.getElementById("msg"),spin=document.getElementById("spin");
+let seq="",rotY=0.6,rotX=0.25,drag=false,lx=0,ly=0,W=0,H=0;
+spin.checked=!matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function resize(){
+  const d=window.devicePixelRatio||1,r=cv.getBoundingClientRect();
+  W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);
+}
+function build(){
+  const clean=seqEl.value.replace(/\s+/g,"").toUpperCase();
+  msg.className="";
+  if(!clean){msg.className="err";msg.textContent="Enter a DNA sequence first.";return;}
+  if(/[^ATGC]/.test(clean)){msg.className="err";msg.textContent="Only the letters A, T, G and C are allowed.";return;}
+  seq=clean.slice(0,MAX);
+  msg.textContent=clean.length>MAX
+    ?"Showing the first "+MAX+" of "+clean.length+" bases."
+    :seq.length+" base pairs, about "+(seq.length/10.5).toFixed(1)+" turns.";
+}
+function frame(){
+  ctx.clearRect(0,0,W,H);
+  if(seq){
+    if(spin.checked&&!drag)rotY+=0.008;
+    const n=seq.length;
+    const s=Math.min(H*0.9/(n*RISE+8),W*0.8/(2*RADIUS+8),9);
+    const ca=Math.cos(rotY),sa=Math.sin(rotY),cb=Math.cos(rotX),sb=Math.sin(rotX);
+    const Zr=RADIUS+Math.abs(n*RISE/2*sb)+1;
+    const items=[];
+    const shade=z=>0.45+0.55*Math.max(0,Math.min(1,(z/Zr+1)/2));
+    function P(i,k){
+      const t=i*TWIST+(k?GROOVE:0),y=(i-(n-1)/2)*RISE;
+      const x0=RADIUS*Math.sin(t),z0=RADIUS*Math.cos(t);
+      const x1=x0*ca+z0*sa,z1=-x0*sa+z0*ca;
+      const y2=y*cb-z1*sb,z2=y*sb+z1*cb;
+      const f=1/(1-z2*s/1600);
+      return{x:W/2+x1*s*f,y:H/2-y2*s*f,z:z2,f:f};
+    }
+    function line(a,b,w,col,z){
+      items.push({z:z,d:()=>{ctx.globalAlpha=shade(z);ctx.strokeStyle=col;ctx.lineWidth=w;ctx.lineCap="round";
+        ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}});
+    }
+    function dot(p,r,col,z,txt){
+      items.push({z:z,d:()=>{ctx.globalAlpha=shade(z);ctx.fillStyle=col;ctx.beginPath();ctx.arc(p.x,p.y,r,0,6.2832);ctx.fill();
+        if(txt){ctx.globalAlpha=1;ctx.fillStyle="#08101a";ctx.font="700 "+Math.round(r*1.15)+"px 'Segoe UI',sans-serif";
+          ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(txt,p.x,p.y+0.5);}}});
+    }
+    const pts=[[],[]];
+    for(let i=0;i<n;i++){pts[0].push(P(i,0));pts[1].push(P(i,1));}
+    for(let k=0;k<2;k++){
+      const col=k?"#a78bfa":"#2dd4bf";
+      for(let i=0;i<n;i++){
+        const p=pts[k][i];
+        if(i<n-1){const q=pts[k][i+1];line(p,q,Math.max(1.5,1.5*s*p.f),col,(p.z+q.z)/2);}
+        dot(p,Math.max(2,1.9*s*p.f),col,p.z);
+      }
+    }
+    const big=n<=24;
+    for(let i=0;i<n;i++){
+      const a=pts[0][i],b=pts[1][i],mz=(a.z+b.z)/2,mf=(a.f+b.f)/2;
+      const b1=seq[i],b2=COMP[b1];
+      const w=Math.max(1.5,1.2*s*mf*(big?0.6:1));
+      line(a,{x:a.x+(b.x-a.x)*0.46,y:a.y+(b.y-a.y)*0.46},w,COL[b1],(a.z+mz)/2);
+      line(b,{x:b.x+(a.x-b.x)*0.46,y:b.y+(a.y-b.y)*0.46},w,COL[b2],(b.z+mz)/2);
+      if(big){
+        const r=Math.max(5,1.6*s*mf);
+        dot({x:a.x+(b.x-a.x)*0.25,y:a.y+(b.y-a.y)*0.25},r,COL[b1],(a.z+mz)/2+0.01,b1);
+        dot({x:b.x+(a.x-b.x)*0.25,y:b.y+(a.y-b.y)*0.25},r,COL[b2],(b.z+mz)/2+0.01,b2);
+      }
+    }
+    items.sort((p,q)=>p.z-q.z);
+    for(const it of items)it.d();
+    ctx.globalAlpha=1;
+  }
+  requestAnimationFrame(frame);
+}
+cv.addEventListener("pointerdown",e=>{drag=true;lx=e.clientX;ly=e.clientY;cv.setPointerCapture(e.pointerId);});
+cv.addEventListener("pointermove",e=>{
+  if(!drag)return;
+  rotY+=(e.clientX-lx)*0.01;
+  rotX=Math.max(-1.2,Math.min(1.2,rotX+(e.clientY-ly)*0.01));
+  lx=e.clientX;ly=e.clientY;
+});
+cv.addEventListener("pointerup",()=>{drag=false;});
+cv.addEventListener("pointercancel",()=>{drag=false;});
+document.getElementById("go").addEventListener("click",build);
+document.getElementById("ex").addEventListener("click",()=>{
+  seqEl.value=Array.from({length:20},()=>"ATGC"[Math.floor(Math.random()*4)]).join("");
+  build();
+});
+window.addEventListener("resize",resize);
+resize();build();frame();
+</script>
+</body>
+</html>

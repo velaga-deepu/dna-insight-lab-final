@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>DNA Insight Lab</title>
+
+
+<style>
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f4f7fb;
+        color: #1f2937;
+        line-height: 1.6;
+    }
+    body > h1, body > h2, body > p, body > form, body > div, body > hr, body > script {
+        max-width: 1100px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    body > h1 {
+        max-width: none;
+        margin: 0;
+        padding: 28px 6%;
+        background: linear-gradient(135deg, #173b57, #236b75);
+        color: white;
+        font-size: 34px;
+    }
+    body > h2:first-of-type {
+        margin-top: 30px;
+        margin-bottom: 8px;
+        font-size: 28px;
+        color: #173b57;
+    }
+    textarea {
+        width: 100%;
+        max-width: 900px;
+        padding: 15px;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        font-size: 16px;
+        resize: vertical;
+        background: white;
+    }
+    button {
+        padding: 10px 16px;
+        border: 0;
+        border-radius: 8px;
+        background: #236b75;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+        margin: 3px;
+    }
+    button:hover { background: #173b57; }
+    hr { border: 0; border-top: 1px solid #dbe3ea; margin-top: 30px; margin-bottom: 30px; }
+    h2 { color: #173b57; margin-top: 28px; }
+    h3 { color: #236b75; margin-top: 24px; }
+    p { color: #4b5563; }
+    .result-card {
+        background: white;
+        border-radius: 14px;
+        padding: 24px;
+        margin: 20px auto;
+        box-shadow: 0 4px 18px rgba(15, 23, 42, 0.08);
+        border: 1px solid #e2e8f0;
+    }
+    .sequence-box {
+        background: #eef7f7;
+        border-left: 5px solid #236b75;
+        padding: 14px 16px;
+        border-radius: 8px;
+        word-break: break-all;
+        font-family: Consolas, monospace;
+    }
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+        gap: 14px;
+        margin: 18px 0 28px;
+    }
+    .summary-card {
+        background: #f8fafc;
+        border: 1px solid #dbe3ea;
+        border-radius: 12px;
+        padding: 18px 12px;
+        text-align: center;
+    }
+    .summary-card .label {
+        display: block;
+        font-size: 13px;
+        color: #64748b;
+        margin-bottom: 5px;
+    }
+    .summary-card .value {
+        display: block;
+        font-size: 25px;
+        font-weight: bold;
+        color: #173b57;
+    }
+    .chart-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 18px;
+        margin-top: 18px;
+        overflow-x: auto;
+    }
+    canvas { border-radius: 8px; background: #fff; }
+    .feature-box {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 16px;
+        margin: 14px 0;
+    }
+    .error-box {
+        background: #fff1f2;
+        border: 1px solid #fecdd3;
+        border-radius: 10px;
+        padding: 16px;
+        color: #9f1239;
+    }
+    @media (max-width: 700px) {
+        body > h1 { font-size: 26px; padding: 22px; }
+        body > h1, body > h2, body > p, body > form, body > div, body > hr { margin-left: 16px; margin-right: 16px; }
+    }
+    
+/* Back to Dashboard button */
+.back-dashboard-wrap {
+    text-align: center;
+    margin: 20px 0 28px;
+}
+
+.back-dashboard-btn {
+    display: inline-block;
+    background-color: #173b57;
+    color: white;
+    text-decoration: none;
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 15px;
+    transition: background-color 0.2s ease;
+}
+
+.back-dashboard-btn:hover {
+    background-color: #245a7d;
+}
+</style>
+
+</head>
+
+<body>
+
+    <h1>🧬 DNA Insight Lab</h1>
+    
+<div class="back-dashboard-wrap">
+    <a href="/dashboard" class="back-dashboard-btn">
+        ← Back to Dashboard
+    </a>
+</div>
+
+
+    <!-- ================================================= -->
+    <!-- MAIN DNA ANALYZER -->
+    <!-- ================================================= -->
+
+    <h2>DNA Analyzer</h2>
+
+    <p>
+        <strong>NOTE:</strong>
+        Enter a DNA sequence containing only A, T, G and C.
+    </p>
+
+
+    <form method="POST">
+
+        <textarea
+            name="sequence"
+            id="mainSequence"
+            rows="6"
+            cols="60"
+            required
+        ></textarea>
+
+        <div class="sequence-limit">
+    <strong>DNA Sequence</strong><br>
+    <span>Maximum length: 10,000 bp</span><br>
+    <span>Current length: <strong id="mainSequenceLength">0</strong> bp</span>
+</div>
+
+
+        <br><br>
+
+
+        <!-- MAIN DNA EXAMPLES -->
+
+        <button
+            type="button"
+            onclick="showMainExamples()"
+        >
+            💡 Need an example?
+        </button>
+
+
+        <div
+            id="mainExamples"
+            style="display: none;"
+        >
+
+            <p>
+                <strong>Choose an example:</strong>
+            </p>
+
+
+            <button
+                type="button"
+                onclick="useMainExample('ATGGCCATTTAA')"
+            >
+                Example 1
+            </button>
+
+
+            <button
+                type="button"
+                onclick="useMainExample('ATGCGTACGTTAG')"
+            >
+                Example 2
+            </button>
+
+
+            <button
+                type="button"
+                onclick="useMainExample('ATGAAATAG')"
+            >
+                Example 3
+            </button>
+
+
+            <p>
+                Click an example to automatically enter it
+                into the DNA sequence box.
+            </p>
+
+        </div>
+
+
+        <br>
+
+
+        <button type="submit">
+            Analyze DNA
+        </button>
+
+    </form>
+
+{% if error_title %}
+    <hr>
+
+    <div class="error-box">
+        <p>
+            <strong>{{ error_title }}</strong>
+        </p>
+
+        <p style="white-space: pre-line;">
+            {{ error }}
+        </p>
+    </div>
+{% endif %}
+
+    {% if result %}
+
+        {% if result.error %}
+
+            <hr>
+
+            <div class="error-box">
+            <p>
+                <strong>Invalid input!</strong>
+                {{ result.error_message }}
+            </p>
+            </div>
+
+        {% else %}
+
+            <hr>
+
+            <h2>Analysis Results</h2>
+            <form method="POST" action="{{ url_for('save_analysis_report') }}">
+    <input type="hidden" name="module" value="DNA Analyzer">
+    <input type="hidden" name="title" value="DNA Sequence Analysis">
+
+    <textarea name="details" hidden>{{ result | tojson }}</textarea>
+
+    <button type="submit">
+        💾 Save DNA Analysis to Report
+    </button>
+</form>
+
+<p>
+    <a href="{{ url_for('saved_reports') }}">View Saved Analyses</a>
+</p>
+
+
+            <div class="result-card">
+                <h3>🧬 Input Sequence</h3>
+                <div class="sequence-box">{{ result.sequence }}</div>
+                <p><strong>Sequence Length:</strong> {{ result.length }} bases</p>
+            </div>
+
+
+
+            <!-- NUCLEOTIDE COUNT -->
+
+            <h3>Nucleotide Count</h3>
+
+            <p>
+                A: {{ result.A }}
+            </p>
+
+            <p>
+                T: {{ result.T }}
+            </p>
+
+            <p>
+                G: {{ result.G }}
+            </p>
+
+            <p>
+                C: {{ result.C }}
+            </p>
+
+
+
+            <!-- COMPOSITION -->
+
+            <h3>Composition</h3>
+
+            <p>
+
+                <strong>GC Content:</strong>
+
+                {{ "%.2f"|format(result.GC) }}%
+
+            </p>
+
+
+            <p>
+
+                <strong>AT Content:</strong>
+
+                {{ "%.2f"|format(result.AT) }}%
+
+            </p>
+            <!-- ================================================= -->
+            <!-- DNA VISUALIZATIONS -->
+            <!-- ================================================= -->
+
+            <hr>
+
+            <h2>📊 DNA Visualizations</h2>
+
+            <p>
+                Visual representation of the nucleotide composition
+                and GC/AT content of the analyzed DNA sequence.
+            </p>
+
+            <!-- ANALYSIS SUMMARY -->
+
+            <div class="result-card">
+                <h3>📋 Analysis Summary</h3>
+
+                <div class="summary-grid">
+                    <div class="summary-card"><span class="label">Sequence Length</span><span class="value">{{ result.length }}</span></div>
+                    <div class="summary-card"><span class="label">A Count</span><span class="value">{{ result.A }}</span></div>
+                    <div class="summary-card"><span class="label">T Count</span><span class="value">{{ result.T }}</span></div>
+                    <div class="summary-card"><span class="label">G Count</span><span class="value">{{ result.G }}</span></div>
+                    <div class="summary-card"><span class="label">C Count</span><span class="value">{{ result.C }}</span></div>
+                    <div class="summary-card"><span class="label">GC Content</span><span class="value">{{ "%.2f"|format(result.GC) }}%</span></div>
+                    <div class="summary-card"><span class="label">AT Content</span><span class="value">{{ "%.2f"|format(result.AT) }}%</span></div>
+                </div>
+            </div>
+
+
+            <!-- BAR CHART -->
+
+            <h3>📊 A / T / G / C Composition</h3>
+
+            <div class="chart-card">
+            <canvas
+                id="nucleotideChart"
+                width="700"
+                height="400"
+                style="max-width: 100%; border: 1px solid #ddd;"
+                data-a="{{ result.A }}"
+                data-t="{{ result.T }}"
+                data-g="{{ result.G }}"
+                data-c="{{ result.C }}"
+            ></canvas>
+            </div>
+
+
+            <!-- PIE CHART -->
+
+            <h3>🥧 GC vs AT Content</h3>
+
+            <div class="chart-card">
+            <canvas
+                id="gcAtChart"
+                width="450"
+                height="450"
+                style="max-width: 100%; border: 1px solid #ddd;"
+                data-gc="{{ result.GC }}"
+                data-at="{{ result.AT }}"
+            ></canvas>
+            <p>
+                GC Content:
+                <strong>{{ "%.2f"|format(result.GC) }}%</strong>
+            </p>
+
+            <p>
+                AT Content:
+                <strong>{{ "%.2f"|format(result.AT) }}%</strong>
+            </p>
+            </div>
+
+
+
+
+            <!-- REVERSE COMPLEMENT -->
+
+            <h3>Reverse Complement</h3>
+
+            <p>
+                {{ result.reverse_complement }}
+            </p>
+
+
+            <hr>
+
+
+
+            <!-- DNA → RNA → PROTEIN -->
+
+            <h2>🧬 DNA → RNA → Protein</h2>
+
+
+            <h3>DNA → RNA</h3>
+
+            <p>
+
+                <strong>RNA Sequence:</strong>
+
+                {{ result.rna }}
+
+            </p>
+
+
+            <p>
+
+                DNA uses
+                <strong>T (Thymine)</strong>,
+
+                while RNA uses
+                <strong>U (Uracil)</strong>.
+
+            </p>
+
+
+
+            <h3>RNA → Protein</h3>
+
+            <p>
+
+                <strong>Protein Sequence:</strong>
+
+                {{ result.protein }}
+
+            </p>
+
+
+            <p>
+
+                Each letter in the protein sequence
+                represents one amino acid.
+
+            </p>
+
+
+
+            <!-- CODON ANALYSIS -->
+
+            <h3>Codon Analysis</h3>
+
+
+            {% if result.codons %}
+
+                <p>
+
+                    RNA is divided into groups of three bases
+                    called <strong>codons</strong>.
+
+                </p>
+
+
+                {% for item in result.codons %}
+
+                    <p>
+
+                        <strong>
+                            {{ item.codon }}
+                        </strong>
+
+                        →
+
+                        {{ item.amino_acid_name }}
+
+                        ({{ item.amino_acid }})
+
+                    </p>
+
+                {% endfor %}
+
+
+            {% else %}
+
+                <p>
+                    No complete codons found.
+                </p>
+
+            {% endif %}
+
+
+
+            <!-- ORF DETECTION -->
+
+            <hr>
+
+
+            <h2>🧬 ORF Detection</h2>
+
+
+            <p>
+
+                An <strong>Open Reading Frame (ORF)</strong>
+                is a DNA region that begins with a start codon
+                <strong>ATG</strong> and ends with an in-frame
+                stop codon such as
+                <strong>TAA, TAG, or TGA</strong>.
+
+            </p>
+
+
+            {% if result.orfs %}
+
+                {% for orf in result.orfs %}
+
+                    <h3>
+                        Potential ORF {{ loop.index }}
+                    </h3>
+
+
+                    <p>
+
+                        <strong>Start Position:</strong>
+
+                        {{ orf.start }}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>End Position:</strong>
+
+                        {{ orf.end }}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>Length:</strong>
+
+                        {{ orf.length }} bases
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>ORF Sequence:</strong>
+
+                        {{ orf.sequence }}
+
+                    </p>
+
+                {% endfor %}
+
+
+            {% else %}
+
+                <p>
+                    No complete ORF detected.
+                </p>
+
+            {% endif %}
+
+        {% endif %}
+
+    {% endif %}
+
+
+
+    <!-- ================================================= -->
+    <!-- MUTATION ANALYSIS -->
+    <!-- ================================================= -->
+
+    <hr>
+
+
+    <h2>🧬 Point Mutation Detection</h2>
+
+
+    <p>
+
+        Compare a reference DNA sequence with a sample DNA
+        sequence to identify differences between them.
+
+    </p>
+
+
+    <form
+        method="POST"
+        action="/mutation"
+    >
+
+
+        <!-- REFERENCE SEQUENCE -->
+
+        <h3>
+            Reference DNA Sequence
+        </h3>
+
+
+        <textarea
+            name="reference"
+            id="referenceSequence"
+            rows="4"
+            cols="60"
+            required
+        ></textarea>
+
+
+        <br><br>
+
+
+        <!-- REFERENCE EXAMPLES -->
+
+        <button
+            type="button"
+            onclick="showReferenceExamples()"
+        >
+            💡 Need an example?
+        </button>
+
+
+        <div
+            id="referenceExamples"
+            style="display: none;"
+        >
+
+            <p>
+                <strong>Choose an example:</strong>
+            </p>
+
+
+            <button
+                type="button"
+                onclick="useReferenceExample('ATGGCC')"
+            >
+                Example 1
+            </button>
+
+
+            <button
+                type="button"
+                onclick="useReferenceExample('ATGCGT')"
+            >
+                Example 2
+            </button>
+
+
+            <button
+                type="button"
+                onclick="useReferenceExample('ATGAAA')"
+            >
+                Example 3
+            </button>
+
+
+            <p>
+                Click an example to enter it into the
+                reference sequence box.
+            </p>
+
+        </div>
+
+
+
+        <!-- SAMPLE SEQUENCE -->
+
+        <h3>
+            Sample DNA Sequence
+        </h3>
+
+
+        <textarea
+            name="sample"
+            id="sampleSequence"
+            rows="4"
+            cols="60"
+            required
+        ></textarea>
+
+
+        <br><br>
+
+
+        <!-- SAMPLE EXAMPLES -->
+
+        <button
+            type="button"
+            onclick="showSampleExamples()"
+        >
+            💡 Need an example?
+        </button>
+
+
+        <div
+            id="sampleExamples"
+            style="display: none;"
+        >
+
+            <p>
+                <strong>Choose an example:</strong>
+            </p>
+
+
+            <button
+                type="button"
+                onclick="useSampleExample('ATGACC')"
+            >
+                Example 1
+            </button>
+
+
+            <button
+                type="button"
+                onclick="useSampleExample('ATGAGT')"
+            >
+                Example 2
+            </button>
+
+
+            <button
+                type="button"
+                onclick="useSampleExample('ATGATA')"
+            >
+                Example 3
+            </button>
+
+
+            <p>
+                Click an example to enter it into the
+                sample sequence box.
+            </p>
+
+        </div>
+
+
+        <br><br>
+
+
+        <button type="submit">
+            Compare Sequences
+        </button>
+
+
+    </form>
+
+
+
+    {% if mutation_result %}
+
+        <hr>
+
+
+        {% if mutation_result.error %}
+
+            <p>
+
+                <strong>
+                    Comparison Error:
+                </strong>
+
+                {{ mutation_result.error_message }}
+
+            </p>
+
+
+        {% else %}
+
+
+            <h2>
+                Mutation Analysis Result
+            </h2>
+
+<form method="POST" action="{{ url_for('save_analysis_report') }}">
+    <input type="hidden" name="module" value="Point Mutation Detection">
+    <input type="hidden" name="title" value="Mutation Analysis">
+
+    <textarea name="details" hidden>{{ mutation_result | tojson }}</textarea>
+
+    <button type="submit">
+        💾 Save Mutation Analysis to Report
+    </button>
+</form>
+
+<p>
+    <a href="{{ url_for('saved_reports') }}">View Saved Analyses</a>
+</p>
+            <p>
+
+                <strong>
+                    Reference Sequence:
+                </strong>
+
+                {{ mutation_result.reference }}
+
+            </p>
+
+
+            <p>
+
+                <strong>
+                    Sample Sequence:
+                </strong>
+
+                {{ mutation_result.sample }}
+
+            </p>
+
+
+            <p>
+
+                <strong>
+                    Total Differences:
+                </strong>
+
+                {{ mutation_result.total_mutations }}
+
+            </p>
+
+
+
+            {% if mutation_result.differences %}
+
+                <h3>
+                    Detected Differences
+                </h3>
+
+
+                {% for mutation in mutation_result.differences %}
+
+
+                    <p>
+
+                        <strong>
+                            Position:
+                        </strong>
+
+                        {{ mutation.position }}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Reference Base:
+                        </strong>
+
+                        {{ mutation.reference }}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Sample Base:
+                        </strong>
+
+                        {{ mutation.sample }}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Mutation Type:
+                        </strong>
+
+                        {{ mutation.type }}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Change:
+                        </strong>
+
+                        {{ mutation.change }}
+
+                    </p>
+
+
+                    <hr>
+
+
+                {% endfor %}
+
+
+            {% else %}
+
+                <p>
+
+                    <strong>
+                        No differences detected.
+                    </strong>
+
+                    The reference and sample sequences
+                    are identical.
+
+                </p>
+
+            {% endif %}
+
+
+        {% endif %}
+
+    {% endif %}
+
+
+
+    <!-- ================================================= -->
+    <!-- JAVASCRIPT -->
+    <!-- ================================================= -->
+
+    <script>
+
+
+        // =================================================
+        // MAIN DNA ANALYZER EXAMPLES
+        // =================================================
+
+        function showMainExamples() {
+
+            let examples =
+                document.getElementById("mainExamples");
+
+
+            if (examples.style.display === "none") {
+
+                examples.style.display = "block";
+
+            } else {
+
+                examples.style.display = "none";
+
+            }
+
+        }
+
+        const mainSequence = document.getElementById("mainSequence");
+const mainSequenceLength = document.getElementById("mainSequenceLength");
+
+if (mainSequence && mainSequenceLength) {
+    function updateMainSequenceLength() {
+        mainSequenceLength.textContent =
+            mainSequence.value.length.toLocaleString();
+    }
+
+    mainSequence.addEventListener("input", updateMainSequenceLength);
+    updateMainSequenceLength();
+}
+
+
+        function useMainExample(sequence) {
+
+            document.getElementById("mainSequence").value =
+                sequence;
+
+        }
+
+
+
+        // =================================================
+        // REFERENCE DNA EXAMPLES
+        // =================================================
+
+        function showReferenceExamples() {
+
+            let examples =
+                document.getElementById("referenceExamples");
+
+
+            if (examples.style.display === "none") {
+
+                examples.style.display = "block";
+
+            } else {
+
+                examples.style.display = "none";
+
+            }
+
+        }
+
+
+        function useReferenceExample(sequence) {
+
+            document.getElementById("referenceSequence").value =
+                sequence;
+
+        }
+
+
+
+        // =================================================
+        // SAMPLE DNA EXAMPLES
+        // =================================================
+
+        function showSampleExamples() {
+
+            let examples =
+                document.getElementById("sampleExamples");
+
+
+            if (examples.style.display === "none") {
+
+                examples.style.display = "block";
+
+            } else {
+
+                examples.style.display = "none";
+
+            }
+
+        }
+
+
+        function useSampleExample(sequence) {
+
+            document.getElementById("sampleSequence").value =
+                sequence;
+
+        }
+
+
+
+        // =================================================
+        // DNA VISUALIZATION CHARTS
+        // =================================================
+
+        function drawDNACharts() {
+
+            const nucleotideCanvas =
+                document.getElementById("nucleotideChart");
+
+            const gcAtCanvas =
+                document.getElementById("gcAtChart");
+
+            if (!nucleotideCanvas || !gcAtCanvas) {
+                return;
+            }
+
+            // -------------------------------
+            // NUCLEOTIDE BAR CHART
+            // -------------------------------
+
+            const nctx = nucleotideCanvas.getContext("2d");
+
+            const values = [
+                Number(nucleotideCanvas.dataset.a),
+                Number(nucleotideCanvas.dataset.t),
+                Number(nucleotideCanvas.dataset.g),
+                Number(nucleotideCanvas.dataset.c)
+            ];
+
+            const labels = ["A", "T", "G", "C"];
+
+            const canvasWidth = nucleotideCanvas.width;
+            const canvasHeight = nucleotideCanvas.height;
+
+            nctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+            const maxValue = Math.max(...values, 1);
+
+            const barWidth = 90;
+            const gap = 60;
+            const startX = 80;
+            const chartBottom = 330;
+            const chartTop = 50;
+            const chartHeight = chartBottom - chartTop;
+
+            // Axes
+            nctx.beginPath();
+            nctx.moveTo(60, chartTop);
+            nctx.lineTo(60, chartBottom);
+            nctx.lineTo(650, chartBottom);
+            nctx.stroke();
+
+            for (let i = 0; i < values.length; i++) {
+
+                const barHeight =
+                    (values[i] / maxValue) * chartHeight;
+
+                const x =
+                    startX + i * (barWidth + gap);
+
+                const y =
+                    chartBottom - barHeight;
+
+                nctx.fillStyle =
+                    ["#4CAF50", "#2196F3", "#FF9800", "#9C27B0"][i];
+
+                nctx.fillRect(
+                    x,
+                    y,
+                    barWidth,
+                    barHeight
+                );
+
+                nctx.fillStyle = "#000";
+                nctx.font = "18px Arial";
+                nctx.textAlign = "center";
+
+                nctx.fillText(
+                    labels[i],
+                    x + barWidth / 2,
+                    chartBottom + 30
+                );
+
+                nctx.fillText(
+                    values[i],
+                    x + barWidth / 2,
+                    y - 10
+                );
+            }
+
+
+            // -------------------------------
+            // GC / AT PIE CHART
+            // -------------------------------
+
+            const pctx = gcAtCanvas.getContext("2d");
+
+            const gc =
+                Number(gcAtCanvas.dataset.gc);
+
+            const at =
+                Number(gcAtCanvas.dataset.at);
+
+            pctx.clearRect(
+                0,
+                0,
+                gcAtCanvas.width,
+                gcAtCanvas.height
+            );
+
+            const centerX = 225;
+            const centerY = 210;
+            const radius = 140;
+
+            const gcAngle =
+                (gc / 100) * Math.PI * 2;
+
+            // GC portion
+            pctx.beginPath();
+            pctx.moveTo(centerX, centerY);
+            pctx.arc(
+                centerX,
+                centerY,
+                radius,
+                0,
+                gcAngle
+            );
+            pctx.closePath();
+            pctx.fillStyle = "#4CAF50";
+            pctx.fill();
+
+            // AT portion
+            pctx.beginPath();
+            pctx.moveTo(centerX, centerY);
+            pctx.arc(
+                centerX,
+                centerY,
+                radius,
+                gcAngle,
+                Math.PI * 2
+            );
+            pctx.closePath();
+            pctx.fillStyle = "#2196F3";
+            pctx.fill();
+
+            // Legend
+            pctx.font = "18px Arial";
+            pctx.fillStyle = "#000";
+            pctx.textAlign = "left";
+
+            pctx.fillText(
+                "GC: " + gc.toFixed(2) + "%",
+                40,
+                400
+            );
+
+            pctx.fillText(
+                "AT: " + at.toFixed(2) + "%",
+                250,
+                400
+            );
+        }
+
+        drawDNACharts();
+
+    </script>
+
+
+</body>
+
+</html>

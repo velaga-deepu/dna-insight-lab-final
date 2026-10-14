@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNA Insight Lab | Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: transparent;
+            color: #1f2937;
+            position: relative;
+            isolation: isolate;
+        }
+
+        /* Blue DNA background video */
+        .dna-background-video {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .dna-background-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background: rgba(244, 247, 251, 0.55);
+        }
+
+        /* Header */
+        .topbar {
+            background: #102a43;
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .brand {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            opacity: 0.85;
+            margin-top: 4px;
+        }
+
+        .home-btn {
+            color: white;
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 9px 15px;
+            border-radius: 8px;
+        }
+
+        /* Welcome section */
+        .hero {
+            max-width: 1100px;
+            margin: 45px auto 25px;
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            margin-bottom: 10px;
+            font-size: 34px;
+        }
+
+        .hero p {
+            color: #64748b;
+            max-width: 760px;
+            line-height: 1.6;
+        }
+
+        /* Dashboard cards */
+        .grid {
+            max-width: 1100px;
+            margin: 0 auto 45px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        .card {
+            min-width: 0;
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 5px 20px rgba(15, 23, 42, 0.08);
+            border: 1px solid #e5e7eb;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+        }
+
+        .icon {
+            font-size: 34px;
+        }
+
+        .card h2 {
+            font-size: 20px;
+            margin: 14px 0 8px;
+        }
+
+        .card p {
+            color: #64748b;
+            line-height: 1.5;
+            min-height: 68px;
+        }
+
+        .card a {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+            background: #2563eb;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .card a:hover {
+            background: #1d4ed8;
+        }
+
+        /* Educational notice */
+        .info {
+            max-width: 1100px;
+            margin: 0 auto 45px;
+            padding: 0 20px;
+        }
+
+        .info-box {
+            background: #eaf2ff;
+            border-left: 5px solid #2563eb;
+            padding: 20px;
+            border-radius: 10px;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            color: #64748b;
+            padding: 25px;
+            font-size: 13px;
+        }
+
+        /* Tablet screens */
+        @media (max-width: 1000px) {
+            .grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        /* Mobile screens */
+        @media (max-width: 550px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                flex-wrap: wrap;
+            }
+
+            .hero h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Background video -->
+    <video class="dna-background-video"
+           autoplay
+           muted
+           loop
+           playsinline
+           aria-hidden="true">
+        <source
+            src="{{ url_for('static', filename='videos/dna-background.mp4') }}"
+            type="video/mp4">
+    </video>
+
+    <div class="dna-background-overlay" aria-hidden="true"></div>
+
+    <!-- Header -->
+    <header class="topbar">
+        <div>
+            <div class="brand">🧬 DNA Insight Lab</div>
+            <div class="subtitle">
+                Interactive Educational Bioinformatics Laboratory
+            </div>
+        </div>
+
+        <a class="home-btn" href="/">DNA Analyzer</a>
+    </header>
+
+    <!-- Welcome section -->
+    <section class="hero">
+        <h1>Welcome to the DNA Insight Lab</h1>
+        <p>
+            Explore DNA sequences through analysis, comparison, guided experiments,
+            and genetics learning tools. Choose a module below to get started.
+        </p>
+    </section>
+
+    <!-- All cards belong to the same grid -->
+    <section class="grid">
+
+        <div class="card">
+            <div class="icon">🔬</div>
+            <h2>DNA Analyzer</h2>
+            <p>
+                Analyze a DNA sequence, validate bases, calculate length,
+                nucleotide counts, percentages, and GC/AT content.
+            </p>
+            <a href="/">Open Analyzer</a>
+        </div>
+
+        <div class="card">
+            <div class="icon">🔗</div>
+            <h2>DNA Matching</h2>
+            <p>
+                Compare two educational DNA sequences and identify matching
+                positions, differences, and sequence similarity.
+            </p>
+            <a href="/matching">Compare DNA</a>
+        </div>
+
+        <div class="card">
+            <div class="icon">🧪</div>
+            <h2>Virtual DNA Lab</h2>
+            <p>
+                Perform guided experiments such as transcription, translation,
+                complement analysis, and restriction-site analysis.
+            </p>
+            <a href="/lab">Enter Lab</a>
+        </div>
+
+        <div class="card">
+            <div class="icon">🧬</div>
+            <h2>Genetics Explorer</h2>
+            <p>
+                Explore educational examples of genetic conditions and
+                understand how sequence changes can be demonstrated.
+            </p>
+            <a href="/genetics">Explore Genetics</a>
+        </div>
+
+        <div class="card">
+            <div class="icon">🔄</div>
+            <h2>Mutation Analysis</h2>
+            <p>
+                Compare reference and sample sequences to demonstrate point
+                substitutions and their sequence-level effects.
+            </p>
+            <a href="/mutation">Analyze Mutation</a>
+        </div>
+
+        <div class="card">
+            <div class="icon">🌀</div>
+            <h2>3D DNA Helix</h2>
+            <p>
+                Enter a DNA sequence and see it built as a rotating
+                3D double helix with its base pairs.
+            </p>
+            <a href="/helix">View 3D Helix</a>
+        </div>
+
+        <div class="card">
+            <div class="icon">📁</div>
+            <h2>Saved Reports</h2>
+            <p>
+                View your previously saved DNA analysis reports.
+            </p>
+           <a href="/report/saved">View Saved Reports</a>
+        </div>
+
+    </section>
+
+    <!-- Educational information -->
+    <section class="info">
+        <div class="info-box">
+            <strong>📌 Educational project:</strong>
+            DNA Insight Lab is designed for learning basic bioinformatics concepts.
+            Its sequence comparisons and genetics examples are educational and
+            should not be treated as medical diagnosis or genetic testing.
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        DNA Insight Lab • Educational Bioinformatics Mini Project
+    </footer>
+
+</body>
+</html>
