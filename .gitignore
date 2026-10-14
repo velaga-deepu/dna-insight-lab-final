@@ -4,3 +4,4 @@ venv*/
 .env
 *.db
 tempCodeRunnerFile.py
+app_backup.py
